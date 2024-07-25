@@ -12,10 +12,10 @@ public class ProductionGlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                ex.getMessage(),
-                ex.getStatus()
-        );
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(ex.getMessage())
+                .status(ex.getStatus())
+                .build();
 
         HttpStatus status = ex.getStatusCode();
 
@@ -24,10 +24,10 @@ public class ProductionGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                "An unexpected error occurred",
-                ExceptionStatus.ERROR.toString()
-        );
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message("An unexpected error occurred")
+                .status(ExceptionStatus.ERROR.toString())
+                .build();
 
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
