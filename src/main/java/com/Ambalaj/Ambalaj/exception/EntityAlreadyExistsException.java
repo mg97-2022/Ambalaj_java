@@ -4,6 +4,6 @@ import org.springframework.http.HttpStatus;
 
 public class EntityAlreadyExistsException extends CustomException {
     public EntityAlreadyExistsException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+        super(message, HttpStatus.CONFLICT);
     }
 }

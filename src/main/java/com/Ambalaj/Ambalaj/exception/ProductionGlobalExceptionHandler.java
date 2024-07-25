@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ProductionGlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> handleCustomException(CustomException ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
+    public ResponseEntity<ExceptionResponseDTO> handleCustomException(CustomException ex) {
+        ExceptionResponseDTO errorResponse = ExceptionResponseDTO.builder()
                 .message(ex.getMessage())
                 .status(ex.getStatus())
                 .build();
@@ -23,8 +23,8 @@ public class ProductionGlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex) {
-        ErrorResponse errorResponse = ErrorResponse.builder()
+    public ResponseEntity<ExceptionResponseDTO> handleGlobalException(Exception ex) {
+        ExceptionResponseDTO errorResponse = ExceptionResponseDTO.builder()
                 .message("An unexpected error occurred")
                 .status(ExceptionStatus.ERROR.toString())
                 .build();

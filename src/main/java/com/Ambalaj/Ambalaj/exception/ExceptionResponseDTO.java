@@ -9,7 +9,7 @@ import java.util.Date;
 @Builder
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
+public class ExceptionResponseDTO {
     private final Date timestamp = new Date();
     private final Object message;
     private final String status;

@@ -1,6 +1,6 @@
 package com.Ambalaj.Ambalaj.security;
 
-import com.Ambalaj.Ambalaj.exception.ErrorResponse;
+import com.Ambalaj.Ambalaj.exception.ExceptionResponseDTO;
 import com.Ambalaj.Ambalaj.exception.CustomException;
 import com.Ambalaj.Ambalaj.exception.ExceptionStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,23 +33,22 @@ public class GlobalExceptionFilter extends OncePerRequestFilter {
     }
 
     private void handleException(@NotNull HttpServletResponse response, @NotNull Exception ex,
-                                 @NotNull HttpStatus statusCode,
-                                 String status) throws IOException {
-        ErrorResponse errorResponse =
-                ErrorResponse.builder().message(ex.getMessage()).status(status).error(statusCode.getReasonPhrase())
-                        .path(ex.getStackTrace()[0].toString()).exception(ex.toString()).cause(ex.getCause()).build();
+                                 @NotNull HttpStatus statusCode, String status) throws IOException {
+        ExceptionResponseDTO exceptionResponse = ExceptionResponseDTO.builder().message(ex.getMessage()).status(status)
+                .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString()).exception(ex.toString())
+                .cause(ex.getCause()).build();
 
         response.setStatus(statusCode.value());
         response.setContentType("application/json");
         PrintWriter writer = response.getWriter();
-        writer.write(convertObjectToJson(errorResponse));
+        writer.write(convertObjectToJson(exceptionResponse));
         writer.flush();
         writer.close();
     }
 
-    private String convertObjectToJson(ErrorResponse errorResponse) {
+    private String convertObjectToJson(ExceptionResponseDTO exceptionResponse) {
         try {
-            return new ObjectMapper().writeValueAsString(errorResponse);
+            return new ObjectMapper().writeValueAsString(exceptionResponse);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
