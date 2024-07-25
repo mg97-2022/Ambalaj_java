@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,9 +31,10 @@ public class securityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(
-                        (requests) -> requests.requestMatchers("/api/v*/auth/**").permitAll().anyRequest().authenticated())
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
+        http.cors(Customizer.withDefaults()) // Enable CORS
+                .authorizeHttpRequests((requests) -> requests.requestMatchers("/api/v*/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll().requestMatchers("/api-docs/**").permitAll()
+                        .anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(globalExceptionFilter, UsernamePasswordAuthenticationFilter.class)
