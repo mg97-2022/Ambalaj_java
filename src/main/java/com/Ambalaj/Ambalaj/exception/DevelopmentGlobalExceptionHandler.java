@@ -6,6 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,9 +30,8 @@ public class DevelopmentGlobalExceptionHandler {
 
         ExceptionResponseDTO exceptionResponse =
                 ExceptionResponseDTO.builder().message(webRequest.getDescription(false) + " resource not found.")
-                        .status(ExceptionStatus.FAIL.toString())
-                        .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
-                        .exception(ex.toString()).cause(ex.getCause()).build();
+                        .status(ExceptionStatus.FAIL.toString()).error(statusCode.getReasonPhrase())
+                        .path(ex.getStackTrace()[0].toString()).exception(ex.toString()).cause(ex.getCause()).build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -85,8 +85,22 @@ public class DevelopmentGlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
 
+    // Handles not authorized exceptions (Roles exception)
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        HttpStatus statusCode = HttpStatus.FORBIDDEN;
+
+        ExceptionResponseDTO exceptionResponse = ExceptionResponseDTO.builder()
+                .message("You do not have the necessary permissions to access this resource.")
+                .status(ExceptionStatus.FAIL.toString()).error(statusCode.getReasonPhrase())
+                .path(ex.getStackTrace()[0].toString()).exception(ex.toString()).cause(ex.getCause()).build();
+
+        return new ResponseEntity<>(exceptionResponse, statusCode);
+    }
+
     // Handles my custom exceptions
     @ExceptionHandler(CustomException.class)
+
     public ResponseEntity<ExceptionResponseDTO> handleCustomException(CustomException ex) {
         HttpStatus statusCode = ex.getStatusCode();
 
