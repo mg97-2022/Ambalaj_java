@@ -1,7 +1,7 @@
 package com.Ambalaj.Ambalaj.security;
 
-import com.Ambalaj.Ambalaj.appuser.AppUserRole;
-import com.Ambalaj.Ambalaj.appuser.AppUserService;
+import com.Ambalaj.Ambalaj.enums.AppUserRole;
+import com.Ambalaj.Ambalaj.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;

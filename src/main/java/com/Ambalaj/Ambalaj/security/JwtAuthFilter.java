@@ -1,7 +1,7 @@
 package com.Ambalaj.Ambalaj.security;
 
-import com.Ambalaj.Ambalaj.appuser.AppUser;
-import com.Ambalaj.Ambalaj.appuser.AppUserService;
+import com.Ambalaj.Ambalaj.model.AppUserEntity;
+import com.Ambalaj.Ambalaj.service.AppUserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,15 +39,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // 3) Get the payload from the token
         String userEmail = jwtUtil.getJwtPayload(token);
         // 4) Get the user details from db and save it in security context
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            AppUser userDetails = this.appUserService.loadUserByUsername(userEmail);
-            this.setSecurityContext(userDetails, request);
-        }
+//        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//            AppUserEntity userDetails = this.appUserService.loadUserByUsername(userEmail);
+//            this.setSecurityContext(userDetails, request);
+//        }
         // 5) Moves to the next filter
         filterChain.doFilter(request, response);
     }
 
-    private void setSecurityContext(AppUser userDetails, HttpServletRequest request) {
+    private void setSecurityContext(AppUserEntity userDetails, HttpServletRequest request) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

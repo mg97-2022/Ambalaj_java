@@ -32,7 +32,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
         response.setContentType("application/json");
 
         PrintWriter writer = response.getWriter();
-        var responseBody = objectMapper.writeValueAsString(exceptionResponse);
+        String responseBody = objectMapper.writeValueAsString(exceptionResponse);
         writer.write(responseBody);
         writer.flush();
         writer.close();
