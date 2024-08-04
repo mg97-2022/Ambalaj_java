@@ -39,10 +39,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         // 3) Get the payload from the token
         String userEmail = jwtUtil.getJwtPayload(token);
         // 4) Get the user details from db and save it in security context
-//        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//            AppUserEntity userDetails = this.appUserService.loadUserByUsername(userEmail);
-//            this.setSecurityContext(userDetails, request);
-//        }
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            AppUserEntity userDetails = appUserService.loadUserByUsername(userEmail);
+            this.setSecurityContext(userDetails, request);
+        }
         // 5) Moves to the next filter
         filterChain.doFilter(request, response);
     }
