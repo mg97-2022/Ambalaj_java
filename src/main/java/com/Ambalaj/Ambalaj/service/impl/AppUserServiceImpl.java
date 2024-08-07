@@ -21,6 +21,11 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
+    public void updateUser(AppUserEntity user) {
+        appUserRepository.save(user);
+    }
+
+    @Override
     public Optional<AppUserEntity> findUserByEmail(String email) {
         return appUserRepository.findByEmail(email);
     }

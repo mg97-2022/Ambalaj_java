@@ -1,14 +1,15 @@
 package com.Ambalaj.Ambalaj.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "confirmation_tokens")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ConfirmationTokenEntity {
     @Id

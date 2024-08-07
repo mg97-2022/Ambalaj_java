@@ -10,4 +10,6 @@ public interface AuthService {
                        List<Long> companyIndustryIds);
 
     void login(LoginRequestDTO loginRequestDTO);
+
+    void confirmEmail(String confirmationToken);
 }

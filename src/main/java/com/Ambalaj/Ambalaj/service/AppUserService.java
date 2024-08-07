@@ -10,6 +10,8 @@ public interface AppUserService extends UserDetailsService {
     @Override
     AppUserEntity loadUserByUsername(String email) throws UsernameNotFoundException;
 
+    void updateUser(AppUserEntity user);
+
     Optional<AppUserEntity> findUserByEmail(String email);
 
     void saveUser(AppUserEntity user);

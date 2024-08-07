@@ -29,4 +29,11 @@ public class AuthController {
 //        ResponseDTO response = ResponseDTO.builder().data(loginResponse).build();
 //        return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/confirm-email")
+    public ResponseEntity<ResponseDTO> confirmEmail(@RequestParam String confirmationToken) {
+        authUseCase.confirmEmail(confirmationToken);
+        ResponseDTO response = ResponseDTO.builder().message("Your account has been verified successfully.").build();
+        return ResponseEntity.ok(response);
+    }
 }

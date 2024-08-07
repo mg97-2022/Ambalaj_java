@@ -31,4 +31,9 @@ public class AuthUseCaseImpl implements AuthUseCase {
     public void login(LoginRequestDTO loginRequest) {
         authService.login(loginRequest);
     }
+
+    @Override
+    public void confirmEmail(String confirmationToken) {
+        authService.confirmEmail(confirmationToken);
+    }
 }

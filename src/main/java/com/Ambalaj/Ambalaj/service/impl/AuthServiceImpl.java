@@ -11,6 +11,7 @@ import com.Ambalaj.Ambalaj.security.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,15 +25,15 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final AppUserService appUserService;
     private final CityService cityService;
     private final CategoryService categoryService;
     private final IndustryService industryService;
     private final PasswordEncoder passwordEncoder;
     private final CompanyService companyService;
-    private final ConfirmationTokenServiceImpl confirmationTokenService;
+    private final ConfirmationTokenService confirmationTokenService;
     private final EmailService emailService;
     private final EmailTemplates emailTemplates;
+    private final AppUserService appUserService;
 
     @Value("${spring.app.clientUrl}")
     private String clientUrl;
@@ -81,6 +82,20 @@ public class AuthServiceImpl implements AuthService {
 //        return LoginResponseDTO.builder().accessToken(accessToken).user(userDetails).build();
     }
 
+    @Override
+    @Transactional
+    public void confirmEmail(String confirmationToken) {
+        ConfirmationTokenEntity token = confirmationTokenService.getConfirmationToken(confirmationToken);
+        if (token.getAppUser().getEnabled())
+            throw new CustomException("Your account is already enabled.", HttpStatus.BAD_REQUEST);
+        if (token.getExpiresAt().isBefore(LocalDateTime.now()))
+            throw new CustomException("Token is expired.", HttpStatus.BAD_REQUEST);
+        token.setConfirmedAt(LocalDateTime.now());
+        confirmationTokenService.saveConfirmationToken(token);
+        token.getAppUser().setEnabled(true);
+        appUserService.updateUser(token.getAppUser());
+    }
+
     /******************** HELPER METHODS ********************/
     private String generateConfirmationToken() {
         return UUID.randomUUID().toString();
@@ -97,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void sendConfirmationEmail(String email, String userName, String token) throws CustomException {
         String subject = "Confirm your email";
-        String link = clientUrl + "?confirmation_token=" + token;
+        String link = clientUrl + "/api/v1/auth/confirm-email?confirmationToken=" + token;
         String body = emailTemplates.emailConfirmation(userName, link);
         emailService.send(email, body, subject);
     }

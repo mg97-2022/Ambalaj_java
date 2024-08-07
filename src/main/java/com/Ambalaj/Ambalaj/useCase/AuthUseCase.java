@@ -7,4 +7,6 @@ public interface AuthUseCase {
     void companySignup(CompanySignupRequestDTO companySignupRequestDTO);
 
     void login(LoginRequestDTO loginRequest);
+
+    void confirmEmail(String confirmationToken);
 }
