@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class CountryDTO {
-    private Integer id;
+public class CategoryDTO {
+    private Long id;
 
-    @NotBlank(message = "Country name is required.")
+    @NotBlank(message = "Category name is required.")
     private String name;
 }

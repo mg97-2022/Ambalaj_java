@@ -16,11 +16,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class AppUserEntity extends BaseAuditing implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

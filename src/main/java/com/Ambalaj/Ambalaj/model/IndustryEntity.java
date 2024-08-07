@@ -8,11 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "industries")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class IndustryEntity extends BaseAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

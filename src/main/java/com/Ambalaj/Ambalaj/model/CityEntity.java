@@ -2,15 +2,13 @@ package com.Ambalaj.Ambalaj.model;
 
 import com.Ambalaj.Ambalaj.auditing.BaseAuditing;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Entity
 @Table(name = "cities", uniqueConstraints = @UniqueConstraint(columnNames = {"country_id", "name"}))
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class CityEntity extends BaseAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

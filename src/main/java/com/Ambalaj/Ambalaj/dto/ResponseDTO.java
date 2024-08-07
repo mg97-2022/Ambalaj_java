@@ -1,4 +1,4 @@
-package com.Ambalaj.Ambalaj.utils;
+package com.Ambalaj.Ambalaj.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

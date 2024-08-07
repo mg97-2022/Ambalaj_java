@@ -8,11 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "categories")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class CategoryEntity extends BaseAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

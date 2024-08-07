@@ -2,7 +2,7 @@ package com.Ambalaj.Ambalaj.controller;
 
 import com.Ambalaj.Ambalaj.dto.CountryDTO;
 import com.Ambalaj.Ambalaj.useCase.CountryUseCase;
-import com.Ambalaj.Ambalaj.utils.ResponseDTO;
+import com.Ambalaj.Ambalaj.dto.ResponseDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

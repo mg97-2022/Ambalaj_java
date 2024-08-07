@@ -1,9 +1,9 @@
 package com.Ambalaj.Ambalaj.repository;
 
-import com.Ambalaj.Ambalaj.model.CompanyEntity;
+import com.Ambalaj.Ambalaj.model.CategoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CompanyRepository extends JpaRepository<CompanyEntity, Long> {
+public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
 }

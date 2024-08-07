@@ -6,8 +6,8 @@ import lombok.*;
 
 @Entity
 @Table(name = "countries")
-@Getter
-@Setter
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class CountryEntity extends BaseAuditing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
