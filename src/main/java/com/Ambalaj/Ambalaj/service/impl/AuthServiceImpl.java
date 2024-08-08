@@ -42,7 +42,6 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void companySignup(CompanyEntity company, Long companyCityId, List<Long> companyCategoryIds,
                               List<Long> companyIndustryIds) {
-        // 1) Construct company entity
         CityEntity city = cityService.getCity(companyCityId);
         company.setCity(city);
         List<CategoryEntity> categories = categoryService.getCategoriesByIds(companyCategoryIds);
@@ -51,11 +50,8 @@ public class AuthServiceImpl implements AuthService {
         company.setIndustries(industries);
         company.getAppUser().setPassword(passwordEncoder.encode(company.getAppUser().getPassword()));
         company.getAppUser().setRole(AppUserRole.COMPANY);
-        // 2) Add company
         companyService.addCompany(company);
-        // 3) Save the confirmation token for the user
         String token = saveConfirmationToken(company.getAppUser());
-        // 4) Send the confirmation token with email
         sendConfirmationEmail(company.getAppUser().getEmail(), company.getName(), token);
     }
 
@@ -87,7 +83,7 @@ public class AuthServiceImpl implements AuthService {
     public void confirmEmail(String confirmationToken) {
         ConfirmationTokenEntity token = confirmationTokenService.getConfirmationToken(confirmationToken);
         if (token.getAppUser().getEnabled())
-            throw new CustomException("Your account is already enabled.", HttpStatus.BAD_REQUEST);
+            throw new CustomException("Your email is already confirmed.", HttpStatus.BAD_REQUEST);
         if (token.getExpiresAt().isBefore(LocalDateTime.now()))
             throw new CustomException("Token is expired.", HttpStatus.BAD_REQUEST);
         token.setConfirmedAt(LocalDateTime.now());
@@ -114,9 +110,19 @@ public class AuthServiceImpl implements AuthService {
         if (user.getResetPasswordTokenExpiry().isBefore(LocalDateTime.now()))
             throw new CustomException("Token is expired.", HttpStatus.BAD_REQUEST);
         user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordChangedAt(LocalDateTime.now());
         user.setResetPasswordToken(null);
         user.setResetPasswordTokenExpiry(null);
         appUserService.updateUser(user);
+    }
+
+    @Override
+    @Transactional
+    public void resendConfirmationEmail(String appUserEmail) {
+        AppUserEntity user = appUserService.findUserByEmail(appUserEmail);
+        if (user.getEnabled()) throw new CustomException("Your email is already confirmed.", HttpStatus.BAD_REQUEST);
+        String token = saveConfirmationToken(user);
+        sendConfirmationEmail(appUserEmail, appUserEmail, token);
     }
 
     /******************** HELPER METHODS ********************/

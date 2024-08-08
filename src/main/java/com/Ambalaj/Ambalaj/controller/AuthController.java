@@ -48,4 +48,11 @@ public class AuthController {
         authUseCase.resetPassword(resetPasswordRequestDTO.getPassword(), resetToken);
         return ResponseEntity.ok(ResponseDTO.builder().message("Password reset successfully.").build());
     }
+
+    @PostMapping("/resend-confirmation-email")
+    public ResponseEntity<ResponseDTO> resendConfirmationEmail(
+            @Valid @RequestBody ResendConfirmationEmailDTO resendConfirmationEmail) {
+        authUseCase.resendConfirmationEmail(resendConfirmationEmail.getEmail());
+        return ResponseEntity.ok(ResponseDTO.builder().message("Confirmation email sent successfully.").build());
+    }
 }

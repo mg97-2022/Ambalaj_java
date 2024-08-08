@@ -13,4 +13,6 @@ public interface AuthUseCase {
     void forgotPassword(String appUserEmail);
 
     void resetPassword(String newPassword, String resetToken);
+
+    void resendConfirmationEmail(String appUserEmail);
 }
