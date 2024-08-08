@@ -36,4 +36,14 @@ public class AuthUseCaseImpl implements AuthUseCase {
     public void confirmEmail(String confirmationToken) {
         authService.confirmEmail(confirmationToken);
     }
+
+    @Override
+    public void forgotPassword(String appUserEmail) {
+        authService.forgotPassword(appUserEmail);
+    }
+
+    @Override
+    public void resetPassword(String newPassword, String resetToken) {
+        authService.resetPassword(newPassword, resetToken);
+    }
 }

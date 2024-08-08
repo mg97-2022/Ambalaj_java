@@ -12,4 +12,8 @@ public interface AuthService {
     void login(LoginRequestDTO loginRequestDTO);
 
     void confirmEmail(String confirmationToken);
+
+    void forgotPassword(String appUserEmail);
+
+    void resetPassword(String newPassword, String resetToken);
 }

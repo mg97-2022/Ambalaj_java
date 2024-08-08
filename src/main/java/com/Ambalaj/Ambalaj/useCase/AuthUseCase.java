@@ -9,4 +9,8 @@ public interface AuthUseCase {
     void login(LoginRequestDTO loginRequest);
 
     void confirmEmail(String confirmationToken);
+
+    void forgotPassword(String appUserEmail);
+
+    void resetPassword(String newPassword, String resetToken);
 }

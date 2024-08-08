@@ -1,13 +1,12 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.AppUserEntity;
 import com.Ambalaj.Ambalaj.repository.AppUserRepository;
 import com.Ambalaj.Ambalaj.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,13 +25,14 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public Optional<AppUserEntity> findUserByEmail(String email) {
-        return appUserRepository.findByEmail(email);
+    public AppUserEntity findUserByEmail(String email) throws UsernameNotFoundException {
+        return loadUserByUsername(email);
     }
 
     @Override
-    public void saveUser(AppUserEntity user) {
-        appUserRepository.save(user);
+    public AppUserEntity findUserByResetPasswordToken(String resetPasswordToken) throws NotFoundException {
+        return appUserRepository.findByResetPasswordToken(resetPasswordToken)
+                .orElseThrow(() -> new NotFoundException("Invalid reset password token."));
     }
 
     @Override

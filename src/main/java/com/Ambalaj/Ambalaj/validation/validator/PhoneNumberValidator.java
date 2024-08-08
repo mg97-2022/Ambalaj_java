@@ -1,6 +1,6 @@
-package com.Ambalaj.Ambalaj.validation;
+package com.Ambalaj.Ambalaj.validation.validator;
 
-import com.Ambalaj.Ambalaj.annotations.ValidPhoneNumber;
+import com.Ambalaj.Ambalaj.validation.annotation.ValidPhoneNumber;
 import com.Ambalaj.Ambalaj.utils.Regex;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

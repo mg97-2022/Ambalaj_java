@@ -96,24 +96,61 @@ public class AuthServiceImpl implements AuthService {
         appUserService.updateUser(token.getAppUser());
     }
 
+    @Override
+    @Transactional
+    public void forgotPassword(String appUserEmail) {
+        AppUserEntity user = appUserService.findUserByEmail(appUserEmail);
+        verifyAccountStatus(user);
+        String token = generateToken();
+        user.setResetPasswordToken(token);
+        user.setResetPasswordTokenExpiry(LocalDateTime.now().plusMinutes(15));
+        appUserService.updateUser(user);
+        sendResetPasswordEmail(user.getEmail(), user.getUsername(), token);
+    }
+
+    @Override
+    public void resetPassword(String newPassword, String resetToken) {
+        AppUserEntity user = appUserService.findUserByResetPasswordToken(resetToken);
+        if (user.getResetPasswordTokenExpiry().isBefore(LocalDateTime.now()))
+            throw new CustomException("Token is expired.", HttpStatus.BAD_REQUEST);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        user.setResetPasswordTokenExpiry(null);
+        appUserService.updateUser(user);
+    }
+
     /******************** HELPER METHODS ********************/
-    private String generateConfirmationToken() {
+    private String generateToken() {
         return UUID.randomUUID().toString();
     }
 
     private String saveConfirmationToken(AppUserEntity appUserEntity) {
-        String token = generateConfirmationToken();
+        String token = generateToken();
         ConfirmationTokenEntity confirmationToken =
                 ConfirmationTokenEntity.builder().token(token).createdAt(LocalDateTime.now())
-                        .expiresAt(LocalDateTime.now().plusHours(1)).appUser(appUserEntity).build();
+                        .expiresAt(LocalDateTime.now().plusMinutes(15)).appUser(appUserEntity).build();
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         return token;
     }
 
     private void sendConfirmationEmail(String email, String userName, String token) throws CustomException {
         String subject = "Confirm your email";
-        String link = clientUrl + "/api/v1/auth/confirm-email?confirmationToken=" + token;
-        String body = emailTemplates.emailConfirmation(userName, link);
+        // This is the page in Front-End that the user will be redirected to for verification
+        String link = clientUrl + "/confirm-email?confirmationToken=" + token;
+        String body = emailTemplates.emailTemplate(userName, link);
+        emailService.send(email, body, subject);
+    }
+
+    private void verifyAccountStatus(AppUserEntity appUser) {
+        if (!appUser.getEnabled()) throw new CustomException("Please verify your email first.", HttpStatus.BAD_REQUEST);
+        if (appUser.getLocked()) throw new CustomException("Your account is locked", HttpStatus.BAD_REQUEST);
+    }
+
+    private void sendResetPasswordEmail(String email, String userName, String token) throws CustomException {
+        String subject = "Reset your Password";
+        // This is the page in Front-End that the user will be redirected to for resetting password
+        String link = clientUrl + "/reset-password?resetToken=" + token;
+        String body = emailTemplates.emailTemplate(userName, link);
         emailService.send(email, body, subject);
     }
 }

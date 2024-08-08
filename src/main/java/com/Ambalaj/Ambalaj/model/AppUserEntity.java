@@ -41,6 +41,10 @@ public class AppUserEntity extends BaseAuditing implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AppRegisterMethod appRegisterMethod = AppRegisterMethod.EMAIL;
 
+    private String resetPasswordToken;
+
+    private LocalDateTime resetPasswordTokenExpiry;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

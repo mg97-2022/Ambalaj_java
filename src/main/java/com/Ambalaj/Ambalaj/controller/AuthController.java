@@ -16,10 +16,9 @@ public class AuthController {
     @PostMapping("/signup/company")
     public ResponseEntity<ResponseDTO> companySignup(@Valid @RequestBody CompanySignupRequestDTO companySignupDTO) {
         authUseCase.companySignup(companySignupDTO);
-        ResponseDTO response = ResponseDTO.builder().message(
+        return ResponseEntity.ok(ResponseDTO.builder().message(
                         "Your account has been created successfully. Please check your email to verify and activate your account.")
-                .build();
-        return ResponseEntity.ok(response);
+                                         .build());
     }
 
     @PostMapping("/login")
@@ -33,7 +32,20 @@ public class AuthController {
     @GetMapping("/confirm-email")
     public ResponseEntity<ResponseDTO> confirmEmail(@RequestParam String confirmationToken) {
         authUseCase.confirmEmail(confirmationToken);
-        ResponseDTO response = ResponseDTO.builder().message("Your account has been verified successfully.").build();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ResponseDTO.builder().message("Your account has been verified successfully.").build());
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ResponseDTO> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) {
+        authUseCase.forgotPassword(forgotPasswordRequestDTO.getEmail());
+        return ResponseEntity.ok(ResponseDTO.builder().message("Please check your email to reset password.").build());
+    }
+
+    @PatchMapping("/reset-password")
+    public ResponseEntity<ResponseDTO> resetPassword(
+            @Valid @RequestBody ResetPasswordRequestDTO resetPasswordRequestDTO, @RequestParam String resetToken) {
+        authUseCase.resetPassword(resetPasswordRequestDTO.getPassword(), resetToken);
+        return ResponseEntity.ok(ResponseDTO.builder().message("Password reset successfully.").build());
     }
 }

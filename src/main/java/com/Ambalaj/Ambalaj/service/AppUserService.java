@@ -1,10 +1,9 @@
 package com.Ambalaj.Ambalaj.service;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.AppUserEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.Optional;
 
 public interface AppUserService extends UserDetailsService {
     @Override
@@ -12,9 +11,9 @@ public interface AppUserService extends UserDetailsService {
 
     void updateUser(AppUserEntity user);
 
-    Optional<AppUserEntity> findUserByEmail(String email);
+    AppUserEntity findUserByEmail(String email) throws UsernameNotFoundException;
 
-    void saveUser(AppUserEntity user);
+    AppUserEntity findUserByResetPasswordToken(String resetPasswordToken) throws NotFoundException;
 
     boolean userExistsByEmail(String email);
 }

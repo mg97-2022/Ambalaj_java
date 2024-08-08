@@ -1,6 +1,6 @@
 package com.Ambalaj.Ambalaj.dto;
 
-import com.Ambalaj.Ambalaj.annotations.ValidPhoneNumber;
+import com.Ambalaj.Ambalaj.validation.annotation.ValidPhoneNumber;
 import com.Ambalaj.Ambalaj.utils.Regex;
 import jakarta.validation.constraints.*;
 import lombok.Data;

@@ -1,6 +1,6 @@
-package com.Ambalaj.Ambalaj.annotations;
+package com.Ambalaj.Ambalaj.validation.annotation;
 
-import com.Ambalaj.Ambalaj.validation.PasswordsMatcherValidator;
+import com.Ambalaj.Ambalaj.validation.validator.PasswordsMatcherValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
