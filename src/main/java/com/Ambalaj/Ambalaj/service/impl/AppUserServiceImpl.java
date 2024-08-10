@@ -30,9 +30,8 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserEntity findUserByResetPasswordToken(String resetPasswordToken) throws NotFoundException {
-        return appUserRepository.findByResetPasswordToken(resetPasswordToken)
-                .orElseThrow(() -> new NotFoundException("Invalid reset password token."));
+    public AppUserEntity findUserByToken(String token) throws NotFoundException {
+        return appUserRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Invalid token."));
     }
 
     @Override

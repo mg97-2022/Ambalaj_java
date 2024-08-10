@@ -3,6 +3,7 @@ package com.Ambalaj.Ambalaj.model;
 import com.Ambalaj.Ambalaj.enums.AppUserRole;
 import com.Ambalaj.Ambalaj.auditing.BaseAuditing;
 import com.Ambalaj.Ambalaj.enums.AppRegisterMethod;
+import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,9 +42,11 @@ public class AppUserEntity extends BaseAuditing implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AppRegisterMethod appRegisterMethod = AppRegisterMethod.EMAIL;
 
-    private String resetPasswordToken;
+    private String token;
 
-    private LocalDateTime resetPasswordTokenExpiry;
+    private AppUserTokenTypes tokenType;
+
+    private LocalDateTime tokenExpiresAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
