@@ -1,11 +1,17 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.dto.AppUserDTO;
 import com.Ambalaj.Ambalaj.dto.LoginRequestDTO;
+import com.Ambalaj.Ambalaj.dto.LoginResponseDTO;
 import com.Ambalaj.Ambalaj.enums.AppUserRole;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
 import com.Ambalaj.Ambalaj.exception.InvalidDataException;
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
+import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
+import com.Ambalaj.Ambalaj.mapper.CompanyMapper;
 import com.Ambalaj.Ambalaj.model.*;
 import com.Ambalaj.Ambalaj.service.*;
+import com.Ambalaj.Ambalaj.utils.CheckApplicationType;
 import com.Ambalaj.Ambalaj.utils.email.EmailService;
 import com.Ambalaj.Ambalaj.utils.email.EmailTemplates;
 import com.Ambalaj.Ambalaj.exception.CustomException;
@@ -15,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +43,9 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final EmailTemplates emailTemplates;
     private final AppUserService appUserService;
+    private final CheckApplicationType checkApplicationType;
+    private final AppUserMapper appUserMapper;
+    private final CompanyMapper companyMapper;
 
     @Value("${spring.app.clientUrl}")
     private String clientUrl;
@@ -57,26 +68,26 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void login(LoginRequestDTO loginRequestDTO) {
-//        // 1) Check if password and email matches
-//        try {
-//            authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
-//        } catch (AuthenticationException e) {
-//            throw new NotFoundException("Invalid email or password.");
-//        }
-//        // 2) Get the user details
-//        AppUserEntity user = appUserService.findUserByEmail(loginRequestDTO.getEmail())
-//                .orElseThrow(() -> new NotFoundException("User not found."));
-//        // 3) Generate the user access token
-//        String accessToken = jwtUtil.createToken(loginRequestDTO.getEmail());
-//        // 4) Get login response DTO
-//        AppUserDTO userDetails =
-//                AppUserDTO.builder().id(user.getId()).email(user.getEmail())
-////                        .firstName(user.getFirstName())
-////                        .lastName(user.getLastName())
-//                        .role(user.getRole().name()).build();
-//        return LoginResponseDTO.builder().accessToken(accessToken).user(userDetails).build();
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO, boolean isWebsite) {
+        // 1) Check if password and email matches
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
+        } catch (AuthenticationException e) {
+            throw new NotFoundException("Invalid email or password.");
+        }
+        // 2) Get the user details and check if email is confirmed and account not locked
+        AppUserEntity user = appUserService.findUserByEmail(loginRequestDTO.getEmail());
+        verifyAccountStatus(user);
+        // 3) Application type check based on user role
+        if (isWebsite) checkApplicationType.checkWebsiteUser(user.getRole());
+        else checkApplicationType.checkDashboardUser(user.getRole());
+        // 4) Get the account details based on user role
+        Object accountExtraDetails = getAccountDetailsBasedOnRole(user);
+        // 5) Get the response
+        String accessToken = jwtUtil.createToken(loginRequestDTO.getEmail());
+        AppUserDTO userDTO = appUserMapper.toDto(user);
+        return LoginResponseDTO.builder().accessToken(accessToken).user(userDTO).extra(accountExtraDetails).build();
     }
 
     @Override
@@ -136,13 +147,6 @@ public class AuthServiceImpl implements AuthService {
         return token;
     }
 
-    private void resetUserTokenAndSaveUser(AppUserEntity appUserEntity) {
-        appUserEntity.setToken(null);
-        appUserEntity.setTokenType(null);
-        appUserEntity.setTokenExpiresAt(null);
-        appUserService.updateUser(appUserEntity);
-    }
-
     private void sendConfirmationEmail(String email, String userName, String token) throws CustomException {
         String subject = "Confirm your email";
         // This is the page in Front-End that the user will be redirected to for verification
@@ -155,6 +159,23 @@ public class AuthServiceImpl implements AuthService {
         if (!appUser.getEnabled())
             throw new CustomException("Please confirm your email first.", HttpStatus.BAD_REQUEST);
         if (appUser.getLocked()) throw new CustomException("Your account is locked", HttpStatus.BAD_REQUEST);
+    }
+
+    private Object getAccountDetailsBasedOnRole(AppUserEntity appUser) {
+        switch (appUser.getRole()) {
+            case AppUserRole.COMPANY:
+                CompanyEntity companyEntity = companyService.findByAppUser(appUser);
+                return companyMapper.toDto(companyEntity);
+            default:
+                return null;
+        }
+    }
+
+    private void resetUserTokenAndSaveUser(AppUserEntity appUserEntity) {
+        appUserEntity.setToken(null);
+        appUserEntity.setTokenType(null);
+        appUserEntity.setTokenExpiresAt(null);
+        appUserService.updateUser(appUserEntity);
     }
 
     private void sendResetPasswordEmail(String email, String userName, String token) throws CustomException {

@@ -1,5 +1,7 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
+import com.Ambalaj.Ambalaj.model.AppUserEntity;
 import com.Ambalaj.Ambalaj.model.CompanyEntity;
 import com.Ambalaj.Ambalaj.repository.CompanyRepository;
 import com.Ambalaj.Ambalaj.service.CompanyService;
@@ -14,5 +16,11 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public void addCompany(CompanyEntity company) {
         companyRepository.save(company);
+    }
+
+    @Override
+    public CompanyEntity findByAppUser(AppUserEntity appUser) throws NotFoundException {
+        return companyRepository.findByAppUser(appUser).orElseThrow(
+                () -> new NotFoundException(String.format("Company with email %s not found.", appUser.getEmail())));
     }
 }

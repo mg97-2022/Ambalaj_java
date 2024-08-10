@@ -23,10 +23,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        return ResponseEntity.ok(ResponseDTO.builder().message("message").build());
-//        LoginResponseDTO loginResponse = authService.login(loginRequestDTO);
-//        ResponseDTO response = ResponseDTO.builder().data(loginResponse).build();
-//        return ResponseEntity.ok(response);
+        LoginResponseDTO loginResponse = authUseCase.login(loginRequestDTO, true);
+        return ResponseEntity.ok(ResponseDTO.builder().data(loginResponse).build());
     }
 
     @GetMapping("/confirm-email")
@@ -54,5 +52,11 @@ public class AuthController {
             @Valid @RequestBody ResendConfirmationEmailDTO resendConfirmationEmail) {
         authUseCase.resendConfirmationEmail(resendConfirmationEmail.getEmail());
         return ResponseEntity.ok(ResponseDTO.builder().message("Confirmation email sent successfully.").build());
+    }
+
+    @PostMapping("/login/dashboard")
+    public ResponseEntity<ResponseDTO> dashboardLogin(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+        LoginResponseDTO loginResponse = authUseCase.login(loginRequestDTO, false);
+        return ResponseEntity.ok(ResponseDTO.builder().data(loginResponse).build());
     }
 }

@@ -33,9 +33,4 @@ public class AppUserServiceImpl implements AppUserService {
     public AppUserEntity findUserByToken(String token) throws NotFoundException {
         return appUserRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Invalid token."));
     }
-
-    @Override
-    public boolean userExistsByEmail(String email) {
-        return appUserRepository.existsByEmail(email);
-    }
 }

@@ -2,11 +2,12 @@ package com.Ambalaj.Ambalaj.useCase;
 
 import com.Ambalaj.Ambalaj.dto.CompanySignupRequestDTO;
 import com.Ambalaj.Ambalaj.dto.LoginRequestDTO;
+import com.Ambalaj.Ambalaj.dto.LoginResponseDTO;
 
 public interface AuthUseCase {
     void companySignup(CompanySignupRequestDTO companySignupRequestDTO);
 
-    void login(LoginRequestDTO loginRequest);
+    LoginResponseDTO login(LoginRequestDTO loginRequestDTO, boolean isWebsite);
 
     void confirmEmail(String confirmationToken);
 

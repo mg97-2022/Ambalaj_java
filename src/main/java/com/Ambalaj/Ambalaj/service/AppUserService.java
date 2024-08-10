@@ -14,6 +14,4 @@ public interface AppUserService extends UserDetailsService {
     AppUserEntity findUserByEmail(String email) throws UsernameNotFoundException;
 
     AppUserEntity findUserByToken(String token) throws NotFoundException;
-
-    boolean userExistsByEmail(String email);
 }

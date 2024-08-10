@@ -2,6 +2,7 @@ package com.Ambalaj.Ambalaj.useCase.impl;
 
 import com.Ambalaj.Ambalaj.dto.CompanySignupRequestDTO;
 import com.Ambalaj.Ambalaj.dto.LoginRequestDTO;
+import com.Ambalaj.Ambalaj.dto.LoginResponseDTO;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
 import com.Ambalaj.Ambalaj.mapper.CompanyMapper;
 import com.Ambalaj.Ambalaj.model.*;
@@ -28,8 +29,8 @@ public class AuthUseCaseImpl implements AuthUseCase {
     }
 
     @Override
-    public void login(LoginRequestDTO loginRequest) {
-        authService.login(loginRequest);
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO, boolean isWebsite) {
+        return authService.login(loginRequestDTO, isWebsite);
     }
 
     @Override
