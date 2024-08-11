@@ -17,7 +17,7 @@ public class CompanyEntity extends BaseAuditing implements AppUserDetails {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private AppUserEntity appUser;
 
     @Column(nullable = false, unique = true)

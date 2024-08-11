@@ -1,9 +1,9 @@
 package com.Ambalaj.Ambalaj.model;
 
-import com.Ambalaj.Ambalaj.enums.AppUserRole;
 import com.Ambalaj.Ambalaj.auditing.BaseAuditing;
 import com.Ambalaj.Ambalaj.enums.AppRegisterMethod;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
+import com.Ambalaj.Ambalaj.enums.AppUserType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,7 +29,7 @@ public class AppUserEntity extends BaseAuditing implements UserDetails {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private AppUserRole role;
+    private AppUserType type;
 
     private String password;
 
@@ -50,7 +50,7 @@ public class AppUserEntity extends BaseAuditing implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + type.name()));
     }
 
     @Override

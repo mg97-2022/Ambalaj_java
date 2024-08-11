@@ -3,7 +3,7 @@ package com.Ambalaj.Ambalaj.service.impl;
 import com.Ambalaj.Ambalaj.dto.AppUserDTO;
 import com.Ambalaj.Ambalaj.dto.LoginRequestDTO;
 import com.Ambalaj.Ambalaj.dto.LoginResponseDTO;
-import com.Ambalaj.Ambalaj.enums.AppUserRole;
+import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
 import com.Ambalaj.Ambalaj.exception.InvalidDataException;
 import com.Ambalaj.Ambalaj.exception.NotFoundException;
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         List<IndustryEntity> industries = industryService.getIndustriesByIds(companyIndustryIds);
         company.setIndustries(industries);
         company.getAppUser().setPassword(passwordEncoder.encode(company.getAppUser().getPassword()));
-        company.getAppUser().setRole(AppUserRole.COMPANY);
+        company.getAppUser().setType(AppUserType.COMPANY);
         companyService.addCompany(company);
         String token = generateTokenAndSaveWithUser(company.getAppUser(), AppUserTokenTypes.CONFIRM_EMAIL);
         sendConfirmationEmail(company.getAppUser().getEmail(), company.getName(), token);
@@ -79,10 +79,10 @@ public class AuthServiceImpl implements AuthService {
         // 2) Get the user details and check if email is confirmed and account not locked
         AppUserEntity user = appUserService.findUserByEmail(loginRequestDTO.getEmail());
         verifyAccountStatus(user);
-        // 3) Application type check based on user role
-        if (isWebsite) checkApplicationType.checkWebsiteUser(user.getRole());
-        else checkApplicationType.checkDashboardUser(user.getRole());
-        // 4) Get the account details based on user role
+        // 3) Application type check based on user type
+        if (isWebsite) checkApplicationType.checkWebsiteUser(user.getType());
+        else checkApplicationType.checkDashboardUser(user.getType());
+        // 4) Get the account details based on user type
         Object accountExtraDetails = getAccountDetailsBasedOnRole(user);
         // 5) Get the response
         String accessToken = jwtUtil.createToken(loginRequestDTO.getEmail());
@@ -162,8 +162,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Object getAccountDetailsBasedOnRole(AppUserEntity appUser) {
-        switch (appUser.getRole()) {
-            case AppUserRole.COMPANY:
+        switch (appUser.getType()) {
+            case AppUserType.COMPANY:
                 CompanyEntity companyEntity = companyService.findByAppUser(appUser);
                 return companyMapper.toDto(companyEntity);
             default:

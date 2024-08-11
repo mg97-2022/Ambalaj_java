@@ -1,9 +1,8 @@
 package com.Ambalaj.Ambalaj.repository;
 
-import com.Ambalaj.Ambalaj.interfaces.AppUserExtraDetailsRepository;
+import com.Ambalaj.Ambalaj.interfaces.AppUserExtraDetails;
 import com.Ambalaj.Ambalaj.model.CompanyEntity;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public interface CompanyRepository extends AppUserExtraDetailsRepository<CompanyEntity> {
+public interface CompanyRepository extends JpaRepository<CompanyEntity, Long>, AppUserExtraDetails<CompanyEntity> {
 }
