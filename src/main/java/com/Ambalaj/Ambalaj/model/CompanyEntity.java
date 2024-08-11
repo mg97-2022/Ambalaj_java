@@ -1,6 +1,7 @@
 package com.Ambalaj.Ambalaj.model;
 
 import com.Ambalaj.Ambalaj.auditing.BaseAuditing;
+import com.Ambalaj.Ambalaj.interfaces.AppUserDetails;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Table(name = "companies")
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CompanyEntity extends BaseAuditing {
+public class CompanyEntity extends BaseAuditing implements AppUserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
