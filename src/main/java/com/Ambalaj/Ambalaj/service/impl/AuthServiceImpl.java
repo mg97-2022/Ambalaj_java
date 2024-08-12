@@ -7,6 +7,7 @@ import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
 import com.Ambalaj.Ambalaj.exception.InvalidDataException;
 import com.Ambalaj.Ambalaj.exception.NotFoundException;
+import com.Ambalaj.Ambalaj.mapper.AdminMapper;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
 import com.Ambalaj.Ambalaj.mapper.CompanyMapper;
 import com.Ambalaj.Ambalaj.model.*;
@@ -20,9 +21,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,9 +42,11 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final EmailTemplates emailTemplates;
     private final AppUserService appUserService;
+    private final AdminService adminService;
     private final CheckApplicationType checkApplicationType;
     private final AppUserMapper appUserMapper;
     private final CompanyMapper companyMapper;
+    private final AdminMapper adminMapper;
 
     @Value("${spring.app.clientUrl}")
     private String clientUrl;
@@ -73,12 +74,15 @@ public class AuthServiceImpl implements AuthService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
-        } catch (AuthenticationException e) {
+        } catch (BadCredentialsException e) {
             throw new NotFoundException("Invalid email or password.");
+        } catch (LockedException e) {
+            throw new CustomException("This account is locked.", HttpStatus.LOCKED);
+        } catch (DisabledException e) {
+            throw new CustomException("Please confirm your email first.", HttpStatus.FORBIDDEN);
         }
-        // 2) Get the user details and check if email is confirmed and account not locked
+        // 2) Get the user details
         AppUserEntity user = appUserService.findUserByEmail(loginRequestDTO.getEmail());
-        verifyAccountStatus(user);
         // 3) Application type check based on user type
         if (isWebsite) checkApplicationType.checkWebsiteUser(user.getType());
         else checkApplicationType.checkDashboardUser(user.getType());
@@ -107,7 +111,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void forgotPassword(String appUserEmail) {
         AppUserEntity user = appUserService.findUserByEmail(appUserEmail);
-        verifyAccountStatus(user);
+        if (!user.getEnabled()) throw new CustomException("Please confirm your email first.", HttpStatus.BAD_REQUEST);
+        if (user.getLocked()) throw new CustomException("Your account is locked", HttpStatus.BAD_REQUEST);
         String token = generateTokenAndSaveWithUser(user, AppUserTokenTypes.RESET_PASSWORD);
         sendResetPasswordEmail(user.getEmail(), user.getUsername(), token);
     }
@@ -155,17 +160,14 @@ public class AuthServiceImpl implements AuthService {
         emailService.send(email, body, subject);
     }
 
-    private void verifyAccountStatus(AppUserEntity appUser) {
-        if (!appUser.getEnabled())
-            throw new CustomException("Please confirm your email first.", HttpStatus.BAD_REQUEST);
-        if (appUser.getLocked()) throw new CustomException("Your account is locked", HttpStatus.BAD_REQUEST);
-    }
-
     private Object getAccountDetailsBasedOnRole(AppUserEntity appUser) {
         switch (appUser.getType()) {
             case AppUserType.COMPANY:
                 CompanyEntity companyEntity = companyService.findByAppUser(appUser);
                 return companyMapper.toDto(companyEntity);
+            case AppUserType.ADMIN:
+                AdminEntity adminEntity = adminService.findByAppUser(appUser);
+                return adminMapper.toDto(adminEntity);
             default:
                 return null;
         }
