@@ -21,6 +21,14 @@ public class AuthController {
                                          .build());
     }
 
+    @PostMapping("/signup/client")
+    public ResponseEntity<ResponseDTO> clientSignup(@Valid @RequestBody ClientSignupRequestDTO clientSignupRequestDTO) {
+        authUseCase.clientSignup(clientSignupRequestDTO);
+        return ResponseEntity.ok(ResponseDTO.builder().message(
+                        "Your account has been created successfully. Please check your email to verify and activate your account.")
+                                         .build());
+    }
+
     @PostMapping("/login")
     public ResponseEntity<ResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         LoginResponseDTO loginResponse = authUseCase.login(loginRequestDTO, true);

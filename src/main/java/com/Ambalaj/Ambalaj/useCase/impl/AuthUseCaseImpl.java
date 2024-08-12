@@ -1,9 +1,11 @@
 package com.Ambalaj.Ambalaj.useCase.impl;
 
+import com.Ambalaj.Ambalaj.dto.ClientSignupRequestDTO;
 import com.Ambalaj.Ambalaj.dto.CompanySignupRequestDTO;
 import com.Ambalaj.Ambalaj.dto.LoginRequestDTO;
 import com.Ambalaj.Ambalaj.dto.LoginResponseDTO;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
+import com.Ambalaj.Ambalaj.mapper.ClientMapper;
 import com.Ambalaj.Ambalaj.mapper.CompanyMapper;
 import com.Ambalaj.Ambalaj.model.*;
 import com.Ambalaj.Ambalaj.service.AuthService;
@@ -17,6 +19,7 @@ public class AuthUseCaseImpl implements AuthUseCase {
     private final AuthService authService;
     private final AppUserMapper appUserMapper;
     private final CompanyMapper companyMapper;
+    private final ClientMapper clientMapper;
 
     @Override
     public void companySignup(CompanySignupRequestDTO companySignupDTO) {
@@ -26,6 +29,14 @@ public class AuthUseCaseImpl implements AuthUseCase {
         authService.companySignup(company, companySignupDTO.getCompany().getCityId(),
                                   companySignupDTO.getCompany().getCategoriesId(),
                                   companySignupDTO.getCompany().getIndustriesId());
+    }
+
+    @Override
+    public void clientSignup(ClientSignupRequestDTO clientSignupDTO) {
+        AppUserEntity appUser = appUserMapper.toEntityFromSignup(clientSignupDTO.getUser());
+        ClientEntity client = clientMapper.toEntityFromSignup(clientSignupDTO.getClient());
+        client.setAppUser(appUser);
+        authService.clientSignup(client);
     }
 
     @Override

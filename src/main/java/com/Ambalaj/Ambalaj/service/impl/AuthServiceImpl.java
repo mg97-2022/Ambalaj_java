@@ -9,6 +9,7 @@ import com.Ambalaj.Ambalaj.exception.InvalidDataException;
 import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.mapper.AdminMapper;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
+import com.Ambalaj.Ambalaj.mapper.ClientMapper;
 import com.Ambalaj.Ambalaj.mapper.CompanyMapper;
 import com.Ambalaj.Ambalaj.model.*;
 import com.Ambalaj.Ambalaj.service.*;
@@ -42,10 +43,12 @@ public class AuthServiceImpl implements AuthService {
     private final EmailService emailService;
     private final EmailTemplates emailTemplates;
     private final AppUserService appUserService;
+    private final ClientService clientService;
     private final AdminService adminService;
     private final CheckApplicationType checkApplicationType;
     private final AppUserMapper appUserMapper;
     private final CompanyMapper companyMapper;
+    private final ClientMapper clientMapper;
     private final AdminMapper adminMapper;
 
     @Value("${spring.app.clientUrl}")
@@ -66,6 +69,16 @@ public class AuthServiceImpl implements AuthService {
         companyService.addCompany(company);
         String token = generateTokenAndSaveWithUser(company.getAppUser(), AppUserTokenTypes.CONFIRM_EMAIL);
         sendConfirmationEmail(company.getAppUser().getEmail(), company.getName(), token);
+    }
+
+    @Override
+    public void clientSignup(ClientEntity client) {
+        client.getAppUser().setPassword(passwordEncoder.encode(client.getAppUser().getPassword()));
+        client.getAppUser().setType(AppUserType.CLIENT);
+        clientService.addClient(client);
+        String token = generateTokenAndSaveWithUser(client.getAppUser(), AppUserTokenTypes.CONFIRM_EMAIL);
+        String clientName = client.getFirstName() + " " + client.getLastName();
+        sendConfirmationEmail(client.getAppUser().getEmail(), clientName, token);
     }
 
     @Override
@@ -161,16 +174,21 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private Object getAccountDetailsBasedOnRole(AppUserEntity appUser) {
-        switch (appUser.getType()) {
-            case AppUserType.COMPANY:
+        return switch (appUser.getType()) {
+            case AppUserType.COMPANY -> {
                 CompanyEntity companyEntity = companyService.findByAppUser(appUser);
-                return companyMapper.toDto(companyEntity);
-            case AppUserType.ADMIN:
+                yield companyMapper.toDto(companyEntity);
+            }
+            case AppUserType.CLIENT -> {
+                ClientEntity clientEntity = clientService.findByAppUser(appUser);
+                yield clientMapper.toDto(clientEntity);
+            }
+            case AppUserType.ADMIN -> {
                 AdminEntity adminEntity = adminService.findByAppUser(appUser);
-                return adminMapper.toDto(adminEntity);
-            default:
-                return null;
-        }
+                yield adminMapper.toDto(adminEntity);
+            }
+            default -> null;
+        };
     }
 
     private void resetUserTokenAndSaveUser(AppUserEntity appUserEntity) {
