@@ -7,6 +7,7 @@ import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
 import com.Ambalaj.Ambalaj.exception.InvalidDataException;
 import com.Ambalaj.Ambalaj.exception.NotFoundException;
+import com.Ambalaj.Ambalaj.interfaces.AppUserTypeExtraDetails;
 import com.Ambalaj.Ambalaj.mapper.AdminMapper;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
 import com.Ambalaj.Ambalaj.mapper.ClientMapper;
@@ -100,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
         if (isWebsite) checkApplicationType.checkWebsiteUser(user.getType());
         else checkApplicationType.checkDashboardUser(user.getType());
         // 4) Get the account details based on user type
-        Object accountExtraDetails = getAccountDetailsBasedOnRole(user);
+        Object accountExtraDetails = getAccountDetailsBasedOnType(user);
         // 5) Get the response
         String accessToken = jwtUtil.createToken(loginRequestDTO.getEmail());
         AppUserDTO userDTO = appUserMapper.toDto(user);
@@ -173,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
         emailService.send(email, body, subject);
     }
 
-    private Object getAccountDetailsBasedOnRole(AppUserEntity appUser) {
+    private AppUserTypeExtraDetails getAccountDetailsBasedOnType(AppUserEntity appUser) {
         return switch (appUser.getType()) {
             case AppUserType.COMPANY -> {
                 CompanyEntity companyEntity = companyService.findByAppUser(appUser);
