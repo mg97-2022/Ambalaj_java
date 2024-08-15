@@ -1,6 +1,6 @@
 package com.Ambalaj.Ambalaj.security;
 
-import com.Ambalaj.Ambalaj.enums.AppUserRole;
+import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +39,7 @@ public class securityConfig {
         http.cors(Customizer.withDefaults()) // Enable CORS
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/api/v*/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v*/country").permitAll()
-                        .requestMatchers("/api/v*/country/**").hasRole(AppUserRole.ADMIN.name())
+                        .requestMatchers("/api/v*/country/**").hasRole(AppUserType.ADMIN.name())
                         .requestMatchers("/swagger-ui/**").permitAll().requestMatchers("/api-docs/**").permitAll()
                         .anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
