@@ -25,7 +25,7 @@ public class AppUserEntity extends BaseAuditing implements UserDetails {
     @Column(updatable = false, nullable = false, columnDefinition = "UUID")
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, updatable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
