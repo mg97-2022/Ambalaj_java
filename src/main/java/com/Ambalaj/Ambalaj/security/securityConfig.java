@@ -40,6 +40,8 @@ public class securityConfig {
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/api/v*/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v*/country").permitAll()
                         .requestMatchers("/api/v*/country/**").hasRole(AppUserType.ADMIN.name())
+                        .requestMatchers(HttpMethod.GET, "/api/v*/industry").permitAll()
+                        .requestMatchers("/api/v*/industry/**").hasRole(AppUserType.ADMIN.name())
                         .requestMatchers("/swagger-ui/**").permitAll().requestMatchers("/api-docs/**").permitAll()
                         .anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable) // Disable CSRF
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
