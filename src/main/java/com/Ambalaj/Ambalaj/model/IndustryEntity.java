@@ -9,6 +9,8 @@ import java.util.List;
 @Entity
 @Table(name = "industries")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class IndustryEntity extends BaseAuditing {
     @Id
