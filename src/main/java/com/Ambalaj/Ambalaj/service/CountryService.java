@@ -5,7 +5,6 @@ import com.Ambalaj.Ambalaj.model.CountryEntity;
 import java.util.List;
 
 public interface CountryService {
-
     CountryEntity addCountry(CountryEntity countryEntity);
 
     List<CountryEntity> getCountryList();

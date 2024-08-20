@@ -20,8 +20,7 @@ public class CountryController {
     @PostMapping
     public ResponseEntity<ResponseDTO> addCountry(@Valid @RequestBody CountryDTO countryDTO) {
         CountryDTO addedCountry = countryUseCase.addCountry(countryDTO);
-        ResponseDTO response = ResponseDTO.builder().data(addedCountry).build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDTO.builder().data(addedCountry).build());
     }
 
     @GetMapping

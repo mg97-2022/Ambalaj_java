@@ -38,8 +38,8 @@ public class CountryUseCaseImpl implements CountryUseCase {
     @Override
     public CountryDTO updateCountry(CountryDTO countryDTO, Integer countryId) {
         CountryEntity countryEntity = countryMapper.toEntity(countryDTO);
-        CountryEntity addedCountry = countryService.updateCountry(countryEntity, countryId);
-        return countryMapper.toDto(addedCountry);
+        CountryEntity updatedCountry = countryService.updateCountry(countryEntity, countryId);
+        return countryMapper.toDto(updatedCountry);
     }
 
     @Override
