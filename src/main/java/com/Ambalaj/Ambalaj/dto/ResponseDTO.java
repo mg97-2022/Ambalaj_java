@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ResponseDTO {
-    private Object data;
+public class ResponseDTO<T> {
+    private T data;
     private String message;
 }

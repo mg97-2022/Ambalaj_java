@@ -18,33 +18,34 @@ public class IndustryController {
     private final IndustryUseCase industryUseCase;
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> addIndustry(@Valid @RequestBody IndustryDTO industryDTO) {
+    public ResponseEntity<ResponseDTO<IndustryDTO>> addIndustry(@Valid @RequestBody IndustryDTO industryDTO) {
         IndustryDTO addedIndustry = industryUseCase.addIndustry(industryDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDTO.builder().data(addedIndustry).build());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDTO.<IndustryDTO>builder().data(addedIndustry).build());
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO> getIndustries() {
+    public ResponseEntity<ResponseDTO<List<IndustryDTO>>> getIndustries() {
         List<IndustryDTO> industries = industryUseCase.getIndustries();
-        return ResponseEntity.ok(ResponseDTO.builder().data(industries).build());
+        return ResponseEntity.ok(ResponseDTO.<List<IndustryDTO>>builder().data(industries).build());
     }
 
     @GetMapping(path = "/{industryId}")
-    public ResponseEntity<ResponseDTO> getIndustryDetails(@PathVariable Long industryId) {
+    public ResponseEntity<ResponseDTO<IndustryDTO>> getIndustryDetails(@PathVariable Long industryId) {
         IndustryDTO industry = industryUseCase.getIndustryById(industryId);
-        return ResponseEntity.ok(ResponseDTO.builder().data(industry).build());
+        return ResponseEntity.ok(ResponseDTO.<IndustryDTO>builder().data(industry).build());
     }
 
     @PutMapping(path = "/{industryId}")
-    public ResponseEntity<ResponseDTO> updateIndustry(@Valid @RequestBody IndustryDTO industryDto,
-                                                      @PathVariable Long industryId) {
+    public ResponseEntity<ResponseDTO<IndustryDTO>> updateIndustry(@Valid @RequestBody IndustryDTO industryDto,
+                                                                   @PathVariable Long industryId) {
         IndustryDTO updatedIndustry = industryUseCase.updateIndustry(industryDto, industryId);
-        return ResponseEntity.ok(ResponseDTO.builder().data(updatedIndustry).build());
+        return ResponseEntity.ok(ResponseDTO.<IndustryDTO>builder().data(updatedIndustry).build());
     }
 
     @DeleteMapping(path = "/{industryId}")
-    public ResponseEntity<ResponseDTO> deleteIndustry(@PathVariable Long industryId) {
+    public ResponseEntity<Void> deleteIndustry(@PathVariable Long industryId) {
         industryUseCase.deleteIndustry(industryId);
-        return ResponseEntity.ok(ResponseDTO.builder().message("Industry deleted successfully.").build());
+        return ResponseEntity.noContent().build();
     }
 }

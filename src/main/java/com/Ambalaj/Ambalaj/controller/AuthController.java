@@ -14,57 +14,62 @@ public class AuthController {
     private final AuthUseCase authUseCase;
 
     @PostMapping("/signup/company")
-    public ResponseEntity<ResponseDTO> companySignup(@Valid @RequestBody CompanySignupRequestDTO companySignupDTO) {
+    public ResponseEntity<ResponseDTO<Void>> companySignup(
+            @Valid @RequestBody CompanySignupRequestDTO companySignupDTO) {
         authUseCase.companySignup(companySignupDTO);
-        return ResponseEntity.ok(ResponseDTO.builder().message(
+        return ResponseEntity.ok(ResponseDTO.<Void>builder().message(
                         "Your account has been created successfully. Please check your email to verify and activate your account.")
                                          .build());
     }
 
     @PostMapping("/signup/client")
-    public ResponseEntity<ResponseDTO> clientSignup(@Valid @RequestBody ClientSignupRequestDTO clientSignupRequestDTO) {
+    public ResponseEntity<ResponseDTO<Void>> clientSignup(
+            @Valid @RequestBody ClientSignupRequestDTO clientSignupRequestDTO) {
         authUseCase.clientSignup(clientSignupRequestDTO);
-        return ResponseEntity.ok(ResponseDTO.builder().message(
+        return ResponseEntity.ok(ResponseDTO.<Void>builder().message(
                         "Your account has been created successfully. Please check your email to verify and activate your account.")
                                          .build());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<ResponseDTO<LoginResponseDTO>> login(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         LoginResponseDTO loginResponse = authUseCase.login(loginRequestDTO, true);
-        return ResponseEntity.ok(ResponseDTO.builder().data(loginResponse).build());
+        return ResponseEntity.ok(ResponseDTO.<LoginResponseDTO>builder().data(loginResponse).build());
     }
 
     @GetMapping("/confirm-email")
-    public ResponseEntity<ResponseDTO> confirmEmail(@RequestParam String confirmationToken) {
+    public ResponseEntity<ResponseDTO<Void>> confirmEmail(@RequestParam String confirmationToken) {
         authUseCase.confirmEmail(confirmationToken);
-        return ResponseEntity.ok(ResponseDTO.builder().message("Your account has been verified successfully.").build());
+        return ResponseEntity.ok(
+                ResponseDTO.<Void>builder().message("Your account has been verified successfully.").build());
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<ResponseDTO> forgotPassword(
+    public ResponseEntity<ResponseDTO<Void>> forgotPassword(
             @Valid @RequestBody ForgotPasswordRequestDTO forgotPasswordRequestDTO) {
         authUseCase.forgotPassword(forgotPasswordRequestDTO.getEmail());
-        return ResponseEntity.ok(ResponseDTO.builder().message("Please check your email to reset password.").build());
+        return ResponseEntity.ok(
+                ResponseDTO.<Void>builder().message("Please check your email to reset password.").build());
     }
 
     @PatchMapping("/reset-password")
-    public ResponseEntity<ResponseDTO> resetPassword(
+    public ResponseEntity<ResponseDTO<Void>> resetPassword(
             @Valid @RequestBody ResetPasswordRequestDTO resetPasswordRequestDTO, @RequestParam String resetToken) {
         authUseCase.resetPassword(resetPasswordRequestDTO.getPassword(), resetToken);
-        return ResponseEntity.ok(ResponseDTO.builder().message("Password reset successfully.").build());
+        return ResponseEntity.ok(ResponseDTO.<Void>builder().message("Password reset successfully.").build());
     }
 
     @PostMapping("/resend-confirmation-email")
-    public ResponseEntity<ResponseDTO> resendConfirmationEmail(
+    public ResponseEntity<ResponseDTO<Void>> resendConfirmationEmail(
             @Valid @RequestBody ResendConfirmationEmailDTO resendConfirmationEmail) {
         authUseCase.resendConfirmationEmail(resendConfirmationEmail.getEmail());
-        return ResponseEntity.ok(ResponseDTO.builder().message("Confirmation email sent successfully.").build());
+        return ResponseEntity.ok(ResponseDTO.<Void>builder().message("Confirmation email sent successfully.").build());
     }
 
     @PostMapping("/login/dashboard")
-    public ResponseEntity<ResponseDTO> dashboardLogin(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<ResponseDTO<LoginResponseDTO>> dashboardLogin(
+            @Valid @RequestBody LoginRequestDTO loginRequestDTO) {
         LoginResponseDTO loginResponse = authUseCase.login(loginRequestDTO, false);
-        return ResponseEntity.ok(ResponseDTO.builder().data(loginResponse).build());
+        return ResponseEntity.ok(ResponseDTO.<LoginResponseDTO>builder().data(loginResponse).build());
     }
 }

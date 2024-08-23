@@ -18,33 +18,34 @@ public class CountryController {
     private final CountryUseCase countryUseCase;
 
     @PostMapping
-    public ResponseEntity<ResponseDTO> addCountry(@Valid @RequestBody CountryDTO countryDTO) {
+    public ResponseEntity<ResponseDTO<CountryDTO>> addCountry(@Valid @RequestBody CountryDTO countryDTO) {
         CountryDTO addedCountry = countryUseCase.addCountry(countryDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDTO.builder().data(addedCountry).build());
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ResponseDTO.<CountryDTO>builder().data(addedCountry).build());
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO> getCountries() {
+    public ResponseEntity<ResponseDTO<List<CountryDTO>>> getCountries() {
         List<CountryDTO> countries = countryUseCase.getCountryList();
-        return ResponseEntity.ok(ResponseDTO.builder().data(countries).build());
+        return ResponseEntity.ok(ResponseDTO.<List<CountryDTO>>builder().data(countries).build());
     }
 
     @GetMapping(path = "/{countryId}")
-    public ResponseEntity<ResponseDTO> getCountryDetails(@PathVariable Integer countryId) {
+    public ResponseEntity<ResponseDTO<CountryDTO>> getCountryDetails(@PathVariable Integer countryId) {
         CountryDTO country = countryUseCase.getCountry(countryId);
-        return ResponseEntity.ok(ResponseDTO.builder().data(country).build());
+        return ResponseEntity.ok(ResponseDTO.<CountryDTO>builder().data(country).build());
     }
 
     @PutMapping(path = "/{countryId}")
-    public ResponseEntity<ResponseDTO> updateCountry(@Valid @RequestBody CountryDTO countryDTO,
-                                                     @PathVariable Integer countryId) {
+    public ResponseEntity<ResponseDTO<CountryDTO>> updateCountry(@Valid @RequestBody CountryDTO countryDTO,
+                                                                 @PathVariable Integer countryId) {
         CountryDTO updatedCountry = countryUseCase.updateCountry(countryDTO, countryId);
-        return ResponseEntity.ok(ResponseDTO.builder().data(updatedCountry).build());
+        return ResponseEntity.ok(ResponseDTO.<CountryDTO>builder().data(updatedCountry).build());
     }
 
     @DeleteMapping(path = "/{countryId}")
-    public ResponseEntity<ResponseDTO> deleteCountry(@PathVariable Integer countryId) {
+    public ResponseEntity<Void> deleteCountry(@PathVariable Integer countryId) {
         countryUseCase.deleteCountry(countryId);
-        return ResponseEntity.ok(ResponseDTO.builder().message("Country deleted successfully.").build());
+        return ResponseEntity.noContent().build();
     }
 }
