@@ -38,7 +38,7 @@ class CountryServiceImplTest {
     }
 
     @Test
-    void addCountry_shouldReturnAddedCountry() {
+    void addCountry_WhenCountryNameNotExist_ShouldAddCountry() {
         // given
         when(countryRepository.save(mockCountry)).thenReturn(mockCountry);
 
@@ -51,7 +51,7 @@ class CountryServiceImplTest {
     }
 
     @Test
-    void addCountry_shouldThrowExceptionWhenCountryNameIsNotUnique() {
+    void addCountry_WhenCountryNameExists_ShouldThrowException() {
         // given
         when(countryRepository.save(mockCountry)).thenThrow(DataIntegrityViolationException.class);
 
