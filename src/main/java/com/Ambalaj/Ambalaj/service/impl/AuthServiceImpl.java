@@ -36,9 +36,6 @@ import java.util.UUID;
 public class AuthServiceImpl implements AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
-    private final CityService cityService;
-    private final CategoryService categoryService;
-    private final IndustryService industryService;
     private final PasswordEncoder passwordEncoder;
     private final CompanyService companyService;
     private final EmailService emailService;
@@ -57,27 +54,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void companySignup(CompanyEntity company, Long companyCityId, List<Long> companyCategoryIds,
-                              List<Long> companyIndustryIds) {
-        CityEntity city = cityService.getCity(companyCityId);
-        company.setCity(city);
-        List<CategoryEntity> categories = categoryService.getCategoriesByIds(companyCategoryIds);
-        company.setCategories(categories);
-        List<IndustryEntity> industries = industryService.getIndustriesByIds(companyIndustryIds);
-        company.setIndustries(industries);
+    public void companySignup(CompanyEntity company) {
         company.getAppUser().setPassword(passwordEncoder.encode(company.getAppUser().getPassword()));
-        company.getAppUser().setType(AppUserType.COMPANY);
-        companyService.addCompany(company);
         String token = generateTokenAndSaveWithUser(company.getAppUser(), AppUserTokenTypes.CONFIRM_EMAIL);
+        companyService.addCompany(company);
         sendConfirmationEmail(company.getAppUser().getEmail(), company.getName(), token);
     }
 
     @Override
     public void clientSignup(ClientEntity client) {
         client.getAppUser().setPassword(passwordEncoder.encode(client.getAppUser().getPassword()));
-        client.getAppUser().setType(AppUserType.CLIENT);
-        clientService.addClient(client);
         String token = generateTokenAndSaveWithUser(client.getAppUser(), AppUserTokenTypes.CONFIRM_EMAIL);
+        clientService.addClient(client);
         String clientName = client.getFirstName() + " " + client.getLastName();
         sendConfirmationEmail(client.getAppUser().getEmail(), clientName, token);
     }
@@ -128,6 +116,7 @@ public class AuthServiceImpl implements AuthService {
         if (!user.getEnabled()) throw new CustomException("Please confirm your email first.", HttpStatus.BAD_REQUEST);
         if (user.getLocked()) throw new CustomException("Your account is locked", HttpStatus.BAD_REQUEST);
         String token = generateTokenAndSaveWithUser(user, AppUserTokenTypes.RESET_PASSWORD);
+        appUserService.updateUser(user);
         sendResetPasswordEmail(user.getEmail(), user.getUsername(), token);
     }
 
@@ -149,6 +138,7 @@ public class AuthServiceImpl implements AuthService {
         AppUserEntity user = appUserService.findUserByEmail(appUserEmail);
         if (user.getEnabled()) throw new CustomException("Your email is already confirmed.", HttpStatus.BAD_REQUEST);
         String token = generateTokenAndSaveWithUser(user, AppUserTokenTypes.CONFIRM_EMAIL);
+        appUserService.updateUser(user);
         sendConfirmationEmail(appUserEmail, appUserEmail, token);
     }
 
@@ -162,7 +152,6 @@ public class AuthServiceImpl implements AuthService {
         appUserEntity.setToken(token);
         appUserEntity.setTokenType(tokenType);
         appUserEntity.setTokenExpiresAt(LocalDateTime.now().plusMinutes(15));
-        appUserService.updateUser(appUserEntity);
         return token;
     }
 

@@ -23,19 +23,13 @@ public class AuthUseCaseImpl implements AuthUseCase {
 
     @Override
     public void companySignup(CompanySignupRequestDTO companySignupDTO) {
-        AppUserEntity appUser = appUserMapper.toEntityFromSignup(companySignupDTO.getUser());
-        CompanyEntity company = companyMapper.toEntityFromSignup(companySignupDTO.getCompany());
-        company.setAppUser(appUser);
-        authService.companySignup(company, companySignupDTO.getCompany().getCityId(),
-                                  companySignupDTO.getCompany().getCategoriesId(),
-                                  companySignupDTO.getCompany().getIndustriesId());
+        CompanyEntity company = companyMapper.toEntityFromSignup(companySignupDTO);
+        authService.companySignup(company);
     }
 
     @Override
     public void clientSignup(ClientSignupRequestDTO clientSignupDTO) {
-        AppUserEntity appUser = appUserMapper.toEntityFromSignup(clientSignupDTO.getUser());
-        ClientEntity client = clientMapper.toEntityFromSignup(clientSignupDTO.getClient());
-        client.setAppUser(appUser);
+        ClientEntity client = clientMapper.toEntityFromSignup(clientSignupDTO);
         authService.clientSignup(client);
     }
 

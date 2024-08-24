@@ -1,6 +1,8 @@
 package com.Ambalaj.Ambalaj.dto;
 
+import com.Ambalaj.Ambalaj.validation.annotation.ValidPhoneNumber;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -10,7 +12,12 @@ public class ClientSignupRequestDTO {
     @NotNull(message = "User Object is required.")
     private SignupAppUserDTO user;
 
-    @Valid
-    @NotNull(message = "Client Object is required.")
-    private ClientSignupClientDTO client;
+    @NotBlank(message = "Client first name is required.")
+    private String firstName;
+
+    @NotBlank(message = "Client last name is required.")
+    private String lastName;
+
+    @ValidPhoneNumber
+    private String phoneNumber;
 }

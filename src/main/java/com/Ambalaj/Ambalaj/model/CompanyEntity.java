@@ -36,20 +36,20 @@ public class CompanyEntity extends BaseAuditing implements AppUserDetails {
     @Column(nullable = false, unique = true)
     private String taxNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "city_id", nullable = false)
     private CityEntity city;
 
     private String address;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "company_category",
             joinColumns = @JoinColumn(name = "company_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false),
             uniqueConstraints = @UniqueConstraint(columnNames = {"company_id", "category_id"}))
     private List<CategoryEntity> categories;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "company_industry",
             joinColumns = @JoinColumn(name = "company_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "industry_id", nullable = false),

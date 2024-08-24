@@ -44,6 +44,7 @@ public class AppUserEntity extends BaseAuditing implements UserDetails {
 
     private String token;
 
+    @Enumerated(EnumType.STRING)
     private AppUserTokenTypes tokenType;
 
     private LocalDateTime tokenExpiresAt;
