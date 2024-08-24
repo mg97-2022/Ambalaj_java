@@ -21,7 +21,9 @@ public abstract class BaseServiceImpl<T, Id> implements BaseService<T, Id> {
         return getRepository().findAll();
     }
 
-    protected abstract Id getId(T entity);
+    Id getId(T entity) {
+        return null;
+    };
 
     @Override
     public List<T> getEntitiesByIds(List<Id> entityIds, String entityName) {
@@ -40,7 +42,7 @@ public abstract class BaseServiceImpl<T, Id> implements BaseService<T, Id> {
                 .orElseThrow(() -> new NotFoundException(entityName + " not found for ID: " + entityId));
     }
 
-    protected abstract void updateEntityFields(T existingEntity, T updatedEntity);
+    void updateEntityFields(T existingEntity, T updatedEntity) {}
 
     @Override
     public T updateEntity(T updatedEntity, Id entityId, String entityName) {

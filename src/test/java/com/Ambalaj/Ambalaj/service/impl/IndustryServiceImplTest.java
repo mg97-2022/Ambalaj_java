@@ -87,42 +87,6 @@ class IndustryServiceImplTest {
     }
 
     @Test
-    void getId_ShouldReturnEntityId() {
-        // when
-        Long result = underTest.getId(mockIndustry);
-
-        // then
-        assertThat(result).isEqualTo(mockIndustry.getId());
-    }
-
-    @Test
-    void getIndustriesByIds_WhenAllIdsExists_ShouldReturnsListOfIndustries() {
-        // given
-        List<Long> ids = List.of(1L, 2L, 3L);
-        when(industryRepository.findAllById(ids)).thenReturn(mockIndustries);
-
-        // when
-        List<IndustryEntity> result = underTest.getIndustriesByIds(ids);
-
-        // then
-        assertThat(result).isEqualTo(mockIndustries);
-        verify(industryRepository, times(1)).findAllById(ids);
-    }
-
-    @Test
-    void getIndustriesByIds_WhenIdsNotExists_ShouldThrowNotFoundException() {
-        // given
-        List<Long> ids = List.of(1L, 2L, 3L, 4L);
-        when(industryRepository.findAllById(ids)).thenThrow(
-                new NotFoundException("Industries not found for IDs: " + new ArrayList<Long>().add(4L)));
-
-        // when & then
-        NotFoundException exception = assertThrows(NotFoundException.class, () -> underTest.getIndustriesByIds(ids));
-        assertThat("Industries not found for IDs: " + new ArrayList<Long>().add(4L)).isEqualTo(exception.getMessage());
-        verify(industryRepository, times(1)).findAllById(ids);
-    }
-
-    @Test
     void getIndustryById_WhenIndustryExists_ShouldReturnIndustry() {
         // given
         when(industryRepository.findById(mockIndustry.getId())).thenReturn(Optional.of(mockIndustry));

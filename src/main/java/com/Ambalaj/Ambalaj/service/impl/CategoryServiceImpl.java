@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl extends BaseServiceImpl<CategoryEntity, Long> implements CategoryService {
@@ -17,21 +15,6 @@ public class CategoryServiceImpl extends BaseServiceImpl<CategoryEntity, Long> i
     @Override
     public JpaRepository<CategoryEntity, Long> getRepository() {
         return categoryRepository;
-    }
-
-    @Override
-    public List<CategoryEntity> getCategoriesByIds(List<Long> categoryIds) {
-        return getEntitiesByIds(categoryIds, "Categories");
-    }
-
-    @Override
-    public Long getId(CategoryEntity categoryEntity) {
-        return categoryEntity.getId();
-    }
-
-    @Override
-    protected void updateEntityFields(CategoryEntity existingEntity, CategoryEntity updatedEntity) {
-
     }
 }
 

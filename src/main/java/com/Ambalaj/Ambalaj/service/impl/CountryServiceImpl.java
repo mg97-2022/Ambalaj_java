@@ -19,10 +19,10 @@ public class CountryServiceImpl extends BaseServiceImpl<CountryEntity, Integer> 
         return countryRepository;
     }
 
-    @Override
-    protected Integer getId(CountryEntity countryEntity) {
-        return countryEntity.getId();
-    }
+//    @Override
+//    protected Integer getId(CountryEntity countryEntity) {
+//        return countryEntity.getId();
+//    }
 
     @Override
     public CountryEntity addCountry(CountryEntity country) {

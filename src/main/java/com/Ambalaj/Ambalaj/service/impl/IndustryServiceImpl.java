@@ -30,16 +30,6 @@ public class IndustryServiceImpl extends BaseServiceImpl<IndustryEntity, Long> i
     }
 
     @Override
-    protected Long getId(IndustryEntity industryEntity) {
-        return industryEntity.getId();
-    }
-
-    @Override
-    public List<IndustryEntity> getIndustriesByIds(List<Long> industryIds) {
-        return getEntitiesByIds(industryIds, "Industries");
-    }
-
-    @Override
     public IndustryEntity getIndustryById(Long industryId) {
         return getEntityById(industryId, "Industry");
     }

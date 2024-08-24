@@ -9,8 +9,6 @@ public interface IndustryService {
 
     List<IndustryEntity> getIndustries();
 
-    List<IndustryEntity> getIndustriesByIds(List<Long> industryIds);
-
     IndustryEntity getIndustryById(Long industryId);
 
     IndustryEntity updateIndustry(IndustryEntity industryEntity, Long industryId);
