@@ -1,13 +1,10 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
-import com.Ambalaj.Ambalaj.dto.AppUserDTO;
-import com.Ambalaj.Ambalaj.dto.LoginRequestDTO;
-import com.Ambalaj.Ambalaj.dto.LoginResponseDTO;
+import com.Ambalaj.Ambalaj.dto.*;
 import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
 import com.Ambalaj.Ambalaj.exception.InvalidDataException;
 import com.Ambalaj.Ambalaj.exception.NotFoundException;
-import com.Ambalaj.Ambalaj.interfaces.AppUserTypeExtraDetails;
 import com.Ambalaj.Ambalaj.mapper.AdminMapper;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
 import com.Ambalaj.Ambalaj.mapper.ClientMapper;
@@ -28,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -89,7 +85,7 @@ public class AuthServiceImpl implements AuthService {
         if (isWebsite) checkApplicationType.checkWebsiteUser(user.getType());
         else checkApplicationType.checkDashboardUser(user.getType());
         // 4) Get the account details based on user type
-        Object accountExtraDetails = getAccountDetailsBasedOnType(user);
+        AppUserTypeExtraDetailsDTO accountExtraDetails = getAccountDetailsBasedOnType(user);
         // 5) Get the response
         String accessToken = jwtUtil.createToken(loginRequestDTO.getEmail());
         AppUserDTO userDTO = appUserMapper.toDto(user);
@@ -163,7 +159,7 @@ public class AuthServiceImpl implements AuthService {
         emailService.send(email, body, subject);
     }
 
-    private AppUserTypeExtraDetails getAccountDetailsBasedOnType(AppUserEntity appUser) {
+    private AppUserTypeExtraDetailsDTO getAccountDetailsBasedOnType(AppUserEntity appUser) {
         return switch (appUser.getType()) {
             case AppUserType.COMPANY -> {
                 CompanyEntity companyEntity = companyService.findByAppUser(appUser);

@@ -5,5 +5,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CompanyDTO extends AppUserTypeExtraDetailsDTO {
+public abstract class AppUserTypeExtraDetailsDTO {
+    private String name;
 }

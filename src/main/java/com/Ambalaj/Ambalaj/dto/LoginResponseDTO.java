@@ -8,5 +8,5 @@ import lombok.Data;
 public class LoginResponseDTO {
     private String accessToken;
     private AppUserDTO user;
-    private Object extra;
+    private AppUserTypeExtraDetailsDTO extra;
 }
