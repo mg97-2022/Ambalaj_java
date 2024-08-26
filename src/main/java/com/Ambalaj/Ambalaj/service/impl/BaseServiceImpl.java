@@ -5,10 +5,9 @@ import com.Ambalaj.Ambalaj.service.BaseService;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class BaseServiceImpl<T, Id> implements BaseService<T, Id> {
+
     protected abstract JpaRepository<T, Id> getRepository();
 
     @Override
@@ -23,26 +22,15 @@ public abstract class BaseServiceImpl<T, Id> implements BaseService<T, Id> {
 
     Id getId(T entity) {
         return null;
-    };
-
-    @Override
-    public List<T> getEntitiesByIds(List<Id> entityIds, String entityName) {
-        List<T> entities = getRepository().findAllById(entityIds);
-        Set<Id> foundIds = entities.stream().map(this::getId).collect(Collectors.toSet());
-        List<Id> missingIds = entityIds.stream().filter(id -> !foundIds.contains(id)).toList();
-        if (!missingIds.isEmpty()) {
-            throw new NotFoundException(entityName + " not found for IDs: " + missingIds);
-        }
-        return entities;
     }
 
     @Override
     public T getEntityById(Id entityId, String entityName) {
-        return getRepository().findById(entityId)
-                .orElseThrow(() -> new NotFoundException(entityName + " not found for ID: " + entityId));
+        return getRepository().findById(entityId).orElseThrow(() -> new NotFoundException(entityName, entityId));
     }
 
-    void updateEntityFields(T existingEntity, T updatedEntity) {}
+    void updateEntityFields(T existingEntity, T updatedEntity) {
+    }
 
     @Override
     public T updateEntity(T updatedEntity, Id entityId, String entityName) {
@@ -53,8 +41,7 @@ public abstract class BaseServiceImpl<T, Id> implements BaseService<T, Id> {
 
     @Override
     public void deleteEntity(Id entityId, String entityName) {
-        if (!getRepository().existsById(entityId))
-            throw new NotFoundException(entityName + " not found with ID: " + entityId);
+        if (!getRepository().existsById(entityId)) throw new NotFoundException(entityName, entityId);
         getRepository().deleteById(entityId);
     }
 }

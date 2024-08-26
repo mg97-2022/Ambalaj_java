@@ -4,14 +4,15 @@ import com.Ambalaj.Ambalaj.model.CountryEntity;
 import com.Ambalaj.Ambalaj.repository.CountryRepository;
 import com.Ambalaj.Ambalaj.service.CountryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CountryServiceImpl extends BaseServiceImpl<CountryEntity, Integer> implements CountryService {
+public class CountryServiceImpl extends BaseServiceWithPaginationImpl<CountryEntity, Integer> implements CountryService {
     private final CountryRepository countryRepository;
 
     @Override
@@ -19,10 +20,17 @@ public class CountryServiceImpl extends BaseServiceImpl<CountryEntity, Integer> 
         return countryRepository;
     }
 
-//    @Override
-//    protected Integer getId(CountryEntity countryEntity) {
-//        return countryEntity.getId();
-//    }
+    protected JpaSpecificationExecutor<CountryEntity> getSpecificationExecutor() {
+        return countryRepository;
+    }
+
+    @Override
+    protected Specification<CountryEntity> getSearchSpecification(String search) {
+        return (root, query, criteriaBuilder) -> {
+            String searchPattern = "%" + search.toLowerCase() + "%";
+            return criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), searchPattern));
+        };
+    }
 
     @Override
     public CountryEntity addCountry(CountryEntity country) {
@@ -30,8 +38,9 @@ public class CountryServiceImpl extends BaseServiceImpl<CountryEntity, Integer> 
     }
 
     @Override
-    public List<CountryEntity> getCountryList() {
-        return getEntities();
+    public Page<CountryEntity> getCountryList(Integer page, Integer pageSize, String sortBy,
+                                              String sortDirection, String search) {
+        return getPaginatedSortedSearchableEntities(page, pageSize, sortBy, sortDirection, search);
     }
 
     @Override

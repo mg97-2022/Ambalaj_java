@@ -104,7 +104,7 @@ class IndustryServiceImplTest {
         // given
         Long notExistsId = 10L;
         when(industryRepository.findById(notExistsId)).thenThrow(
-                new NotFoundException("Industry not found with ID: " + notExistsId));
+                new NotFoundException("Industry", notExistsId));
 
         // when & then
         NotFoundException exception =
@@ -137,7 +137,7 @@ class IndustryServiceImplTest {
         // given
         Long notExistsId = 10L;
         when(industryRepository.findById(notExistsId)).thenThrow(
-                new NotFoundException("Industry not found with ID: " + notExistsId));
+                new NotFoundException("Industry", notExistsId));
 
         // when & then
         NotFoundException exception =

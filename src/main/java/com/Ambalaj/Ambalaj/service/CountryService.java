@@ -1,13 +1,13 @@
 package com.Ambalaj.Ambalaj.service;
 
 import com.Ambalaj.Ambalaj.model.CountryEntity;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 public interface CountryService {
     CountryEntity addCountry(CountryEntity countryEntity);
 
-    List<CountryEntity> getCountryList();
+    Page<CountryEntity> getCountryList(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                       String search);
 
     CountryEntity getCountry(Integer countryId);
 

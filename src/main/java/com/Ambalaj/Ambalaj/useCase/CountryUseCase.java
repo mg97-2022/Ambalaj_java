@@ -1,13 +1,17 @@
 package com.Ambalaj.Ambalaj.useCase;
 
 import com.Ambalaj.Ambalaj.dto.CountryDTO;
+import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
+import com.Ambalaj.Ambalaj.model.CountryEntity;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface CountryUseCase {
     CountryDTO addCountry(CountryDTO countryDTO);
 
-    List<CountryDTO> getCountryList();
+    PaginatedDTO<CountryDTO> getCountryList(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                            String search);
 
     CountryDTO getCountry(Integer countryId);
 

@@ -1,11 +1,13 @@
 package com.Ambalaj.Ambalaj.useCase.impl;
 
 import com.Ambalaj.Ambalaj.dto.CountryDTO;
+import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 import com.Ambalaj.Ambalaj.mapper.CountryMapper;
 import com.Ambalaj.Ambalaj.model.CountryEntity;
 import com.Ambalaj.Ambalaj.service.CountryService;
 import com.Ambalaj.Ambalaj.useCase.CountryUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,9 +26,11 @@ public class CountryUseCaseImpl implements CountryUseCase {
     }
 
     @Override
-    public List<CountryDTO> getCountryList() {
-        List<CountryEntity> countryList = countryService.getCountryList();
-        return countryMapper.toListDto(countryList);
+    public PaginatedDTO<CountryDTO> getCountryList(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                                   String search) {
+        Page<CountryEntity> pageableCountryList =
+                countryService.getCountryList(page, pageSize, sortBy, sortDirection, search);
+        return countryMapper.toPaginatedDTO(pageableCountryList);
     }
 
     @Override
