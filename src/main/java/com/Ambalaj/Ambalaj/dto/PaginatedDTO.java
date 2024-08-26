@@ -16,5 +16,5 @@ public class PaginatedDTO<T> {
     private Integer pageSize;
     private Integer currentPage;
     private Long totalPages;
-    private Long totalNumber;
+    private Long totalElements;
 }

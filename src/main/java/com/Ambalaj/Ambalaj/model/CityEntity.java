@@ -17,7 +17,7 @@ public class CityEntity extends BaseAuditing {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "country_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "country_id", nullable = false)
     private CountryEntity country;
 }
