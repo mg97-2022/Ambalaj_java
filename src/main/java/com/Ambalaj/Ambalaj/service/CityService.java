@@ -6,7 +6,8 @@ import org.springframework.data.domain.Page;
 public interface CityService {
     CityEntity addCity(CityEntity cityEntity);
 
-    Page<CityEntity> getCities(Integer page, Integer pageSize, String sortBy, String sortDirection, String search);
+    Page<CityEntity> getCities(Integer page, Integer pageSize, String sortBy, String sortDirection, String search,
+                               Integer countryId);
 
     CityEntity getCity(Long cityId);
 

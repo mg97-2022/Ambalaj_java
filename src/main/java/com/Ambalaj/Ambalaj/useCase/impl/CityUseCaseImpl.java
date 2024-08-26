@@ -25,8 +25,9 @@ public class CityUseCaseImpl implements CityUseCase {
 
     @Override
     public PaginatedDTO<CityDTO> getCities(Integer page, Integer pageSize, String sortBy, String sortDirection,
-                                           String search) {
-        Page<CityEntity> pageableCityList = cityService.getCities(page, pageSize, sortBy, sortDirection, search);
+                                           String search, Integer countryId) {
+        Page<CityEntity> pageableCityList =
+                cityService.getCities(page, pageSize, sortBy, sortDirection, search, countryId);
         return cityMapper.toPaginatedDto(pageableCityList);
     }
 

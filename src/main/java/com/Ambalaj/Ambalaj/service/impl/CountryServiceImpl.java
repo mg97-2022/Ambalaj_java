@@ -20,6 +20,7 @@ public class CountryServiceImpl extends BaseServiceWithPaginationImpl<CountryEnt
         return countryRepository;
     }
 
+    @Override
     protected JpaSpecificationExecutor<CountryEntity> getSpecificationExecutor() {
         return countryRepository;
     }

@@ -20,6 +20,7 @@ public class IndustryServiceImpl extends BaseServiceWithPaginationImpl<IndustryE
         return industryRepository;
     }
 
+    @Override
     protected JpaSpecificationExecutor<IndustryEntity> getSpecificationExecutor() {
         return industryRepository;
     }

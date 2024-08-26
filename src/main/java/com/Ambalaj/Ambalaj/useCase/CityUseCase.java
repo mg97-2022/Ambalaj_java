@@ -6,7 +6,8 @@ import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 public interface CityUseCase {
     CityDTO addCity(CityDTO city);
 
-    PaginatedDTO<CityDTO> getCities(Integer page, Integer pageSize, String sortBy, String sortDirection, String search);
+    PaginatedDTO<CityDTO> getCities(Integer page, Integer pageSize, String sortBy, String sortDirection, String search,
+                                    Integer countryId);
 
     CityDTO getCity(Long cityId);
 

@@ -7,7 +7,6 @@ import com.Ambalaj.Ambalaj.useCase.CityUseCase;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,13 +27,17 @@ public class CityController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<PaginatedDTO<CityDTO>>> getCities(
-            @RequestParam @Min(0) Integer page,
-            @RequestParam(defaultValue = "10", required = false) @Min(1) @Max(100) Integer pageSize,
-            @RequestParam(required = false) String sortBy,
-            @RequestParam(defaultValue = "asc", required = false) String sortDirection,
-            @RequestParam(required = false) String search) {
-        PaginatedDTO<CityDTO> cities = cityUseCase.getCities(page, pageSize, sortBy, sortDirection, search);
+    public ResponseEntity<ResponseDTO<PaginatedDTO<CityDTO>>> getCities(@RequestParam @Min(0) Integer page,
+                                                                        @RequestParam(defaultValue = "10",
+                                                                                required = false) @Min(1) @Max(
+                                                                                100) Integer pageSize,
+                                                                        @RequestParam(required = false) String sortBy,
+                                                                        @RequestParam(defaultValue = "asc",
+                                                                                required = false) String sortDirection,
+                                                                        @RequestParam(required = false) String search,
+                                                                        @RequestParam(required = false) @Min(
+                                                                                1) Integer countryId) {
+        PaginatedDTO<CityDTO> cities = cityUseCase.getCities(page, pageSize, sortBy, sortDirection, search, countryId);
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<CityDTO>>builder().data(cities).build());
     }
 
