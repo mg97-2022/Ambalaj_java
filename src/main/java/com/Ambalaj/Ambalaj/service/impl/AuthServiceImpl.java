@@ -3,8 +3,7 @@ package com.Ambalaj.Ambalaj.service.impl;
 import com.Ambalaj.Ambalaj.dto.*;
 import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
-import com.Ambalaj.Ambalaj.exception.InvalidDataException;
-import com.Ambalaj.Ambalaj.exception.NotFoundException;
+import com.Ambalaj.Ambalaj.exception.*;
 import com.Ambalaj.Ambalaj.mapper.AdminMapper;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
 import com.Ambalaj.Ambalaj.mapper.ClientMapper;
@@ -14,7 +13,6 @@ import com.Ambalaj.Ambalaj.service.*;
 import com.Ambalaj.Ambalaj.utils.CheckApplicationType;
 import com.Ambalaj.Ambalaj.utils.email.EmailService;
 import com.Ambalaj.Ambalaj.utils.email.EmailTemplates;
-import com.Ambalaj.Ambalaj.exception.CustomException;
 import com.Ambalaj.Ambalaj.security.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -73,11 +71,11 @@ public class AuthServiceImpl implements AuthService {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new NotFoundException("Invalid email or password.");
+            throw new InvalidDataException("Invalid email or password.");
         } catch (LockedException e) {
-            throw new CustomException("This account is locked.", HttpStatus.LOCKED);
+            throw new ForbiddenException("This account is locked.");
         } catch (DisabledException e) {
-            throw new CustomException("Please confirm your email first.", HttpStatus.FORBIDDEN);
+            throw new UnauthorizedException("Please confirm your email first.");
         }
         // 2) Get the user details
         AppUserEntity user = appUserService.findUserByEmail(loginRequestDTO.getEmail());
@@ -98,9 +96,8 @@ public class AuthServiceImpl implements AuthService {
         AppUserEntity user = appUserService.findUserByToken(confirmationToken);
         if (!AppUserTokenTypes.CONFIRM_EMAIL.equals(user.getTokenType()))
             throw new InvalidDataException("Invalid token type.");
-        if (user.getEnabled()) throw new CustomException("Your email is already confirmed.", HttpStatus.BAD_REQUEST);
-        if (user.getTokenExpiresAt().isBefore(LocalDateTime.now()))
-            throw new CustomException("Token is expired.", HttpStatus.BAD_REQUEST);
+        if (user.getEnabled()) throw new InvalidDataException("Your email is already confirmed.");
+        if (user.getTokenExpiresAt().isBefore(LocalDateTime.now())) throw new InvalidDataException("Token is expired.");
         user.setEnabled(true);
         resetUserTokenAndSaveUser(user);
     }
@@ -109,8 +106,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void forgotPassword(String appUserEmail) {
         AppUserEntity user = appUserService.findUserByEmail(appUserEmail);
-        if (!user.getEnabled()) throw new CustomException("Please confirm your email first.", HttpStatus.BAD_REQUEST);
-        if (user.getLocked()) throw new CustomException("Your account is locked", HttpStatus.BAD_REQUEST);
+        if (!user.getEnabled()) throw new UnauthorizedException("Please confirm your email first.");
+        if (user.getLocked()) throw new ForbiddenException("Your account is locked");
         String token = generateTokenAndSaveWithUser(user, AppUserTokenTypes.RESET_PASSWORD);
         appUserService.updateUser(user);
         sendResetPasswordEmail(user.getEmail(), user.getUsername(), token);
@@ -121,8 +118,7 @@ public class AuthServiceImpl implements AuthService {
         AppUserEntity user = appUserService.findUserByToken(resetToken);
         if (!AppUserTokenTypes.RESET_PASSWORD.equals(user.getTokenType()))
             throw new InvalidDataException("Invalid token type.");
-        if (user.getTokenExpiresAt().isBefore(LocalDateTime.now()))
-            throw new CustomException("Token is expired.", HttpStatus.BAD_REQUEST);
+        if (user.getTokenExpiresAt().isBefore(LocalDateTime.now())) throw new InvalidDataException("Token is expired.");
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setPasswordChangedAt(LocalDateTime.now());
         resetUserTokenAndSaveUser(user);
@@ -132,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void resendConfirmationEmail(String appUserEmail) {
         AppUserEntity user = appUserService.findUserByEmail(appUserEmail);
-        if (user.getEnabled()) throw new CustomException("Your email is already confirmed.", HttpStatus.BAD_REQUEST);
+        if (user.getEnabled()) throw new InvalidDataException("Your email is already confirmed.");
         String token = generateTokenAndSaveWithUser(user, AppUserTokenTypes.CONFIRM_EMAIL);
         appUserService.updateUser(user);
         sendConfirmationEmail(appUserEmail, appUserEmail, token);

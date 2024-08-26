@@ -20,7 +20,6 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientEntity findByAppUser(AppUserEntity appUser) throws NotFoundException {
-        return clientRepository.findByAppUser(appUser).orElseThrow(
-                () -> new NotFoundException(String.format("Client with email %s not found.", appUser.getEmail())));
+        return clientRepository.findByAppUser(appUser).orElseThrow(() -> new NotFoundException("Client"));
     }
 }

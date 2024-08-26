@@ -15,7 +15,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public AdminEntity findByAppUser(AppUserEntity appUser) throws NotFoundException {
-        return adminRepository.findByAppUser(appUser).orElseThrow(
-                () -> new NotFoundException(String.format("Admin with email %s not found.", appUser.getEmail())));
+        return adminRepository.findByAppUser(appUser).orElseThrow(() -> new NotFoundException("Admin"));
     }
 }

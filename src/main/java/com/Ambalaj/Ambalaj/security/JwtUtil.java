@@ -1,6 +1,7 @@
 package com.Ambalaj.Ambalaj.security;
 
 import com.Ambalaj.Ambalaj.exception.CustomException;
+import com.Ambalaj.Ambalaj.exception.UnauthorizedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -48,15 +49,15 @@ public class JwtUtil {
         try {
             Jwts.parser().verifyWith(getSignKey()).build().parseSignedClaims(token);
         } catch (MalformedJwtException e) {
-            throw new CustomException("Invalid JWT token.", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("Invalid JWT token.");
         } catch (ExpiredJwtException e) {
-            throw new CustomException("JWT token is expired.", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("JWT token is expired.");
         } catch (UnsupportedJwtException e) {
-            throw new CustomException("JWT token is unsupported.", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("JWT token is unsupported.");
         } catch (IllegalArgumentException e) {
-            throw new CustomException("JWT claims string is empty.", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("JWT claims string is empty.");
         } catch (Exception e) {
-            throw new CustomException("There is something wrong with this token.", HttpStatus.UNAUTHORIZED);
+            throw new UnauthorizedException("There is something wrong with this token.");
         }
     }
 }

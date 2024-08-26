@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Profile("dev")
@@ -50,15 +51,34 @@ public class DevelopmentGlobalExceptionHandler {
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
 
-    // Handles validation errors messages for annotations (@Valid or @Validated)
+    // Handles validation errors messages for annotations (@Valid)
     // For the response message, it will be an array of messages
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        System.out.println("method" + ex.getBindingResult());
         List<String> errorMessages = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String errorMessage = error.getDefaultMessage();
             errorMessages.add(errorMessage);
         });
+
+        HttpStatus statusCode = HttpStatus.BAD_REQUEST;
+
+        ExceptionResponseDTO exceptionResponse =
+                ExceptionResponseDTO.builder().message(errorMessages).status(ExceptionStatus.FAIL.toString())
+                        .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
+                        .exception(ex.toString()).cause(ex.getCause()).build();
+
+        return new ResponseEntity<>(exceptionResponse, statusCode);
+    }
+
+    // Handles validation errors messages for annotations such requestParams (@Validated)
+    // For the response message, it will be an array of messages
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleConstraintViolationException(
+            jakarta.validation.ConstraintViolationException ex) {
+        String[] messagesArray = ex.getMessage().split(", ");
+        List<String> errorMessages = new ArrayList<>(Arrays.asList(messagesArray));
 
         HttpStatus statusCode = HttpStatus.BAD_REQUEST;
 

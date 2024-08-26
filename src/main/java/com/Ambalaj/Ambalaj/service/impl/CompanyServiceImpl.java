@@ -20,7 +20,6 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyEntity findByAppUser(AppUserEntity appUser) throws NotFoundException {
-        return companyRepository.findByAppUser(appUser).orElseThrow(
-                () -> new NotFoundException(String.format("Company with email %s not found.", appUser.getEmail())));
+        return companyRepository.findByAppUser(appUser).orElseThrow(() -> new NotFoundException("Company"));
     }
 }
