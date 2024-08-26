@@ -37,13 +37,12 @@ public class CountryController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(defaultValue = "asc", required = false) String sortDirection,
             @RequestParam(required = false) String search) {
-        PaginatedDTO<CountryDTO> countries =
-                countryUseCase.getCountryList(page, pageSize, sortBy, sortDirection, search);
+        PaginatedDTO<CountryDTO> countries = countryUseCase.getCountries(page, pageSize, sortBy, sortDirection, search);
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<CountryDTO>>builder().data(countries).build());
     }
 
     @GetMapping(path = "/{countryId}")
-    public ResponseEntity<ResponseDTO<CountryDTO>> getCountryDetails(@PathVariable Integer countryId) {
+    public ResponseEntity<ResponseDTO<CountryDTO>> getCountry(@PathVariable Integer countryId) {
         CountryDTO country = countryUseCase.getCountry(countryId);
         return ResponseEntity.ok(ResponseDTO.<CountryDTO>builder().data(country).build());
     }

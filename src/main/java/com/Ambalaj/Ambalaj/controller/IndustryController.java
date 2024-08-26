@@ -1,15 +1,17 @@
 package com.Ambalaj.Ambalaj.controller;
 
 import com.Ambalaj.Ambalaj.dto.IndustryDTO;
+import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 import com.Ambalaj.Ambalaj.dto.ResponseDTO;
 import com.Ambalaj.Ambalaj.useCase.IndustryUseCase;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/industry")
@@ -25,14 +27,20 @@ public class IndustryController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<List<IndustryDTO>>> getIndustries() {
-        List<IndustryDTO> industries = industryUseCase.getIndustries();
-        return ResponseEntity.ok(ResponseDTO.<List<IndustryDTO>>builder().data(industries).build());
+    public ResponseEntity<ResponseDTO<PaginatedDTO<IndustryDTO>>> getIndustries(
+            @RequestParam(defaultValue = "0", required = false) @Min(0) @NotNull Integer page,
+            @RequestParam(defaultValue = "10", required = false) @Min(1) @Max(100) @NotNull Integer pageSize,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "asc", required = false) String sortDirection,
+            @RequestParam(required = false) String search) {
+        PaginatedDTO<IndustryDTO> industries =
+                industryUseCase.getIndustries(page, pageSize, sortBy, sortDirection, search);
+        return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<IndustryDTO>>builder().data(industries).build());
     }
 
     @GetMapping(path = "/{industryId}")
-    public ResponseEntity<ResponseDTO<IndustryDTO>> getIndustryDetails(@PathVariable Long industryId) {
-        IndustryDTO industry = industryUseCase.getIndustryById(industryId);
+    public ResponseEntity<ResponseDTO<IndustryDTO>> getIndustry(@PathVariable Long industryId) {
+        IndustryDTO industry = industryUseCase.getIndustry(industryId);
         return ResponseEntity.ok(ResponseDTO.<IndustryDTO>builder().data(industry).build());
     }
 

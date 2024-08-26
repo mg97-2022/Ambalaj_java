@@ -6,8 +6,8 @@ import org.springframework.data.domain.Page;
 public interface CountryService {
     CountryEntity addCountry(CountryEntity countryEntity);
 
-    Page<CountryEntity> getCountryList(Integer page, Integer pageSize, String sortBy, String sortDirection,
-                                       String search);
+    Page<CountryEntity> getCountries(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                     String search);
 
     CountryEntity getCountry(Integer countryId);
 

@@ -1,11 +1,13 @@
 package com.Ambalaj.Ambalaj.useCase.impl;
 
 import com.Ambalaj.Ambalaj.dto.IndustryDTO;
+import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 import com.Ambalaj.Ambalaj.mapper.IndustryMapper;
 import com.Ambalaj.Ambalaj.model.IndustryEntity;
 import com.Ambalaj.Ambalaj.service.IndustryService;
 import com.Ambalaj.Ambalaj.useCase.IndustryUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,14 +26,16 @@ public class IndustryUseCaseImpl implements IndustryUseCase {
     }
 
     @Override
-    public List<IndustryDTO> getIndustries() {
-        List<IndustryEntity> industryList = industryService.getIndustries();
-        return industryMapper.toListDto(industryList);
+    public PaginatedDTO<IndustryDTO> getIndustries(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                                   String search) {
+        Page<IndustryEntity> industryList =
+                industryService.getIndustries(page, pageSize, sortBy, sortDirection, search);
+        return industryMapper.toPaginatedDto(industryList);
     }
 
     @Override
-    public IndustryDTO getIndustryById(Long industryId) {
-        IndustryEntity industry = industryService.getIndustryById(industryId);
+    public IndustryDTO getIndustry(Long industryId) {
+        IndustryEntity industry = industryService.getIndustry(industryId);
         return industryMapper.toDto(industry);
     }
 

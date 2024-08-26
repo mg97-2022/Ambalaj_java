@@ -10,7 +10,7 @@ import java.util.List;
 public interface CountryUseCase {
     CountryDTO addCountry(CountryDTO countryDTO);
 
-    PaginatedDTO<CountryDTO> getCountryList(Integer page, Integer pageSize, String sortBy, String sortDirection,
+    PaginatedDTO<CountryDTO> getCountries(Integer page, Integer pageSize, String sortBy, String sortDirection,
                                             String search);
 
     CountryDTO getCountry(Integer countryId);

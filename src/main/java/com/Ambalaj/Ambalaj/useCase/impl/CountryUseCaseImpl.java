@@ -26,11 +26,11 @@ public class CountryUseCaseImpl implements CountryUseCase {
     }
 
     @Override
-    public PaginatedDTO<CountryDTO> getCountryList(Integer page, Integer pageSize, String sortBy, String sortDirection,
-                                                   String search) {
+    public PaginatedDTO<CountryDTO> getCountries(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                                 String search) {
         Page<CountryEntity> pageableCountryList =
-                countryService.getCountryList(page, pageSize, sortBy, sortDirection, search);
-        return countryMapper.toPaginatedDTO(pageableCountryList);
+                countryService.getCountries(page, pageSize, sortBy, sortDirection, search);
+        return countryMapper.toPaginatedDto(pageableCountryList);
     }
 
     @Override

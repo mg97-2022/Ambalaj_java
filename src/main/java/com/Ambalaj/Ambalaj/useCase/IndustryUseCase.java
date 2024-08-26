@@ -1,15 +1,15 @@
 package com.Ambalaj.Ambalaj.useCase;
 
 import com.Ambalaj.Ambalaj.dto.IndustryDTO;
-
-import java.util.List;
+import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 
 public interface IndustryUseCase {
     IndustryDTO addIndustry(IndustryDTO industryDto);
 
-    List<IndustryDTO> getIndustries();
+    PaginatedDTO<IndustryDTO> getIndustries(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                            String search);
 
-    IndustryDTO getIndustryById(Long industryId);
+    IndustryDTO getIndustry(Long industryId);
 
     IndustryDTO updateIndustry(IndustryDTO industryDto, Long industryId);
 

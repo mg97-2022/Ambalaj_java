@@ -1,5 +1,6 @@
 package com.Ambalaj.Ambalaj.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -74,9 +75,8 @@ public class DevelopmentGlobalExceptionHandler {
 
     // Handles validation errors messages for annotations such requestParams (@Validated)
     // For the response message, it will be an array of messages
-    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleConstraintViolationException(
-            jakarta.validation.ConstraintViolationException ex) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleConstraintViolationException(ConstraintViolationException ex) {
         String[] messagesArray = ex.getMessage().split(", ");
         List<String> errorMessages = new ArrayList<>(Arrays.asList(messagesArray));
 

@@ -38,8 +38,8 @@ public class CountryServiceImpl extends BaseServiceWithPaginationImpl<CountryEnt
     }
 
     @Override
-    public Page<CountryEntity> getCountryList(Integer page, Integer pageSize, String sortBy,
-                                              String sortDirection, String search) {
+    public Page<CountryEntity> getCountries(Integer page, Integer pageSize, String sortBy, String sortDirection,
+                                            String search) {
         return getPaginatedSortedSearchableEntities(page, pageSize, sortBy, sortDirection, search);
     }
 
