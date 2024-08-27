@@ -18,8 +18,8 @@ public class AuthController {
             @Valid @RequestBody CompanySignupRequestDTO companySignupDTO) {
         authUseCase.companySignup(companySignupDTO);
         return ResponseEntity.ok(ResponseDTO.<Void>builder().message(
-                        "Your account has been created successfully. Please check your email to verify and activate your account.")
-                                         .build());
+                                                    "Your account has been created successfully. Please check your email to verify and activate your account.")
+                                            .build());
     }
 
     @PostMapping("/signup/client")
@@ -27,8 +27,8 @@ public class AuthController {
             @Valid @RequestBody ClientSignupRequestDTO clientSignupRequestDTO) {
         authUseCase.clientSignup(clientSignupRequestDTO);
         return ResponseEntity.ok(ResponseDTO.<Void>builder().message(
-                        "Your account has been created successfully. Please check your email to verify and activate your account.")
-                                         .build());
+                                                    "Your account has been created successfully. Please check your email to verify and activate your account.")
+                                            .build());
     }
 
     @PostMapping("/login")

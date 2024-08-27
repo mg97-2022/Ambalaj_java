@@ -23,7 +23,7 @@ public class IndustryController {
     public ResponseEntity<ResponseDTO<IndustryDTO>> addIndustry(@Valid @RequestBody IndustryDTO industryDTO) {
         IndustryDTO addedIndustry = industryUseCase.addIndustry(industryDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ResponseDTO.<IndustryDTO>builder().data(addedIndustry).build());
+                             .body(ResponseDTO.<IndustryDTO>builder().data(addedIndustry).build());
     }
 
     @GetMapping
