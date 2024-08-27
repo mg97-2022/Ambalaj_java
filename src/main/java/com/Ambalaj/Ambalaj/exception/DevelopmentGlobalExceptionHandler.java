@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
@@ -26,14 +27,15 @@ public class DevelopmentGlobalExceptionHandler {
 
     // Handles not found resources exception
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleNoResourceFoundException(NoResourceFoundException ex,
-                                                                               WebRequest webRequest) {
+    public ResponseEntity<ExceptionResponseDTO> handleNoResourceFoundException(
+            NoResourceFoundException ex, WebRequest webRequest) {
         HttpStatus statusCode = HttpStatus.NOT_FOUND;
 
         ExceptionResponseDTO exceptionResponse =
                 ExceptionResponseDTO.builder().message(webRequest.getDescription(false) + " resource not found.")
-                        .status(ExceptionStatus.FAIL.toString()).error(statusCode.getReasonPhrase())
-                        .path(ex.getStackTrace()[0].toString()).exception(ex.toString()).cause(ex.getCause()).build();
+                                    .status(ExceptionStatus.FAIL.toString()).error(statusCode.getReasonPhrase())
+                                    .path(ex.getStackTrace()[0].toString()).exception(ex.toString())
+                                    .cause(ex.getCause()).build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -45,9 +47,12 @@ public class DevelopmentGlobalExceptionHandler {
         HttpStatus statusCode = HttpStatus.BAD_REQUEST;
 
         ExceptionResponseDTO exceptionResponse = ExceptionResponseDTO.builder().message(
-                        "Request body is missing or not readable. Please ensure that the request body is properly formatted.")
-                .status(ExceptionStatus.FAIL.toString()).error(statusCode.getReasonPhrase())
-                .path(ex.getStackTrace()[0].toString()).exception(ex.toString()).cause(ex.getCause()).build();
+                                                                             "Request body is missing or not readable. Please ensure that the request body is properly formatted.")
+                                                                     .status(ExceptionStatus.FAIL.toString())
+                                                                     .error(statusCode.getReasonPhrase())
+                                                                     .path(ex.getStackTrace()[0].toString())
+                                                                     .exception(ex.toString()).cause(ex.getCause())
+                                                                     .build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -67,8 +72,8 @@ public class DevelopmentGlobalExceptionHandler {
 
         ExceptionResponseDTO exceptionResponse =
                 ExceptionResponseDTO.builder().message(errorMessages).status(ExceptionStatus.FAIL.toString())
-                        .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
-                        .exception(ex.toString()).cause(ex.getCause()).build();
+                                    .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
+                                    .exception(ex.toString()).cause(ex.getCause()).build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -84,8 +89,23 @@ public class DevelopmentGlobalExceptionHandler {
 
         ExceptionResponseDTO exceptionResponse =
                 ExceptionResponseDTO.builder().message(errorMessages).status(ExceptionStatus.FAIL.toString())
-                        .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
-                        .exception(ex.toString()).cause(ex.getCause()).build();
+                                    .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
+                                    .exception(ex.toString()).cause(ex.getCause()).build();
+
+        return new ResponseEntity<>(exceptionResponse, statusCode);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        HttpStatus statusCode = HttpStatus.BAD_REQUEST;
+
+        ExceptionResponseDTO exceptionResponse = ExceptionResponseDTO.builder().message(
+                                                                             String.format("Invalid data type for parameter '%s'.", ex.getName()))
+                                                                     .status(ExceptionStatus.FAIL.toString())
+                                                                     .error(statusCode.getReasonPhrase())
+                                                                     .path(ex.getStackTrace()[0].toString())
+                                                                     .exception(ex.toString()).cause(ex.getCause())
+                                                                     .build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -99,8 +119,8 @@ public class DevelopmentGlobalExceptionHandler {
 
         ExceptionResponseDTO exceptionResponse =
                 ExceptionResponseDTO.builder().message(errorMessage).status(ExceptionStatus.FAIL.toString())
-                        .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
-                        .exception(ex.toString()).cause(ex.getCause()).build();
+                                    .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
+                                    .exception(ex.toString()).cause(ex.getCause()).build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -110,10 +130,13 @@ public class DevelopmentGlobalExceptionHandler {
     public ResponseEntity<ExceptionResponseDTO> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
         HttpStatus statusCode = HttpStatus.FORBIDDEN;
 
-        ExceptionResponseDTO exceptionResponse = ExceptionResponseDTO.builder()
-                .message("You do not have the necessary permissions to access this resource.")
-                .status(ExceptionStatus.FAIL.toString()).error(statusCode.getReasonPhrase())
-                .path(ex.getStackTrace()[0].toString()).exception(ex.toString()).cause(ex.getCause()).build();
+        ExceptionResponseDTO exceptionResponse = ExceptionResponseDTO.builder().message(
+                                                                             "You do not have the necessary permissions to access this resource.")
+                                                                     .status(ExceptionStatus.FAIL.toString())
+                                                                     .error(statusCode.getReasonPhrase())
+                                                                     .path(ex.getStackTrace()[0].toString())
+                                                                     .exception(ex.toString()).cause(ex.getCause())
+                                                                     .build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -126,8 +149,8 @@ public class DevelopmentGlobalExceptionHandler {
 
         ExceptionResponseDTO exceptionResponse =
                 ExceptionResponseDTO.builder().message(ex.getMessage()).status(ex.getStatus())
-                        .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
-                        .exception(ex.toString()).cause(ex.getCause()).build();
+                                    .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
+                                    .exception(ex.toString()).cause(ex.getCause()).build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
@@ -139,8 +162,8 @@ public class DevelopmentGlobalExceptionHandler {
 
         ExceptionResponseDTO exceptionResponse =
                 ExceptionResponseDTO.builder().message(ex.getMessage()).status(ExceptionStatus.ERROR.toString())
-                        .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
-                        .exception(ex.toString()).cause(ex.getCause()).build();
+                                    .error(statusCode.getReasonPhrase()).path(ex.getStackTrace()[0].toString())
+                                    .exception(ex.toString()).cause(ex.getCause()).build();
 
         return new ResponseEntity<>(exceptionResponse, statusCode);
     }
