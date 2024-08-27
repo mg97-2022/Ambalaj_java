@@ -5,7 +5,6 @@ import com.Ambalaj.Ambalaj.model.AppUserEntity;
 import com.Ambalaj.Ambalaj.repository.AppUserRepository;
 import com.Ambalaj.Ambalaj.service.AppUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,9 +13,9 @@ public class AppUserServiceImpl implements AppUserService {
     private final AppUserRepository appUserRepository;
 
     @Override
-    public AppUserEntity loadUserByUsername(String email) throws UsernameNotFoundException {
+    public AppUserEntity loadUserByUsername(String email) throws NotFoundException {
         return appUserRepository.findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException(String.format("User with email %s not found.", email)));
+                () -> new NotFoundException("User"));
     }
 
     @Override
@@ -25,7 +24,7 @@ public class AppUserServiceImpl implements AppUserService {
     }
 
     @Override
-    public AppUserEntity findUserByEmail(String email) throws UsernameNotFoundException {
+    public AppUserEntity findUserByEmail(String email) throws NotFoundException {
         return loadUserByUsername(email);
     }
 
