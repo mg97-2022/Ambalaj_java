@@ -37,22 +37,32 @@ public class securityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults()) // Enable CORS
-                .authorizeHttpRequests((requests) -> requests.requestMatchers("/api/v*/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v*/country").permitAll()
-                        .requestMatchers("/api/v*/country/**").hasRole(AppUserType.ADMIN.name())
-                        .requestMatchers(HttpMethod.GET, "/api/v*/city").permitAll().requestMatchers("/api/v*/city/**")
-                        .hasRole(AppUserType.ADMIN.name()).requestMatchers(HttpMethod.GET, "/api/v*/industry")
-                        .permitAll().requestMatchers("/api/v*/country/**").hasRole(AppUserType.ADMIN.name())
-                        .requestMatchers(HttpMethod.GET, "/api/v*/industry").permitAll()
-                        .requestMatchers("/api/v*/industry/**").hasRole(AppUserType.ADMIN.name())
-                        .requestMatchers("/swagger-ui/**").permitAll().requestMatchers("/api-docs/**").permitAll()
-                        .anyRequest().authenticated()).csrf(AbstractHttpConfigurer::disable) // Disable CSRF
-                .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).exceptionHandling(
-                        exceptionHandlingConfigurer -> exceptionHandlingConfigurer.authenticationEntryPoint(
-                                AuthenticationEntryPointImpl).accessDeniedHandler(AccessDeniedHandlerImpl))
-                .addFilterBefore(globalExceptionFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .authorizeHttpRequests((requests) -> requests.requestMatchers("/api/v*/auth/**").permitAll()
+                                                         .requestMatchers(HttpMethod.GET, "/api/v*/country").permitAll()
+                                                         .requestMatchers("/api/v*/country/**")
+                                                         .hasRole(AppUserType.ADMIN.name())
+                                                         .requestMatchers(HttpMethod.GET, "/api/v*/city").permitAll()
+                                                         .requestMatchers("/api/v*/city/**")
+                                                         .hasRole(AppUserType.ADMIN.name())
+                                                         .requestMatchers(HttpMethod.GET, "/api/v*/industry")
+                                                         .permitAll().requestMatchers("/api/v*/industry/**")
+                                                         .hasRole(AppUserType.ADMIN.name())
+                                                         .requestMatchers(HttpMethod.GET, "/api/v*/category")
+                                                         .permitAll().requestMatchers("/api/v*/category/**")
+                                                         .hasRole(AppUserType.ADMIN.name())
+                                                         .requestMatchers(HttpMethod.GET, "/api/v*/color")
+                                                         .permitAll().requestMatchers("/api/v*/color/**")
+                                                         .hasRole(AppUserType.ADMIN.name())
+                                                         .requestMatchers("/swagger-ui/**").permitAll()
+                                                         .requestMatchers("/api-docs/**").permitAll().anyRequest()
+                                                         .authenticated())
+            .csrf(AbstractHttpConfigurer::disable) // Disable CSRF
+            .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authenticationProvider(authenticationProvider()).exceptionHandling(
+                    exceptionHandlingConfigurer -> exceptionHandlingConfigurer.authenticationEntryPoint(
+                            AuthenticationEntryPointImpl).accessDeniedHandler(AccessDeniedHandlerImpl))
+            .addFilterBefore(globalExceptionFilter, UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
