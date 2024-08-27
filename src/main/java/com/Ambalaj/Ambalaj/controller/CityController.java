@@ -27,16 +27,12 @@ public class CityController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<PaginatedDTO<CityDTO>>> getCities(@RequestParam @Min(0) Integer page,
-                                                                        @RequestParam(defaultValue = "10",
-                                                                                required = false) @Min(1) @Max(
-                                                                                100) Integer pageSize,
-                                                                        @RequestParam(required = false) String sortBy,
-                                                                        @RequestParam(defaultValue = "asc",
-                                                                                required = false) String sortDirection,
-                                                                        @RequestParam(required = false) String search,
-                                                                        @RequestParam(required = false) @Min(
-                                                                                1) Integer countryId) {
+    public ResponseEntity<ResponseDTO<PaginatedDTO<CityDTO>>> getCities(
+            @RequestParam @Min(0) Integer page,
+            @RequestParam(defaultValue = "10", required = false) @Min(1) @Max(100) Integer pageSize,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "asc", required = false) String sortDirection,
+            @RequestParam(required = false) String search, @RequestParam(required = false) @Min(1) Integer countryId) {
         PaginatedDTO<CityDTO> cities = cityUseCase.getCities(page, pageSize, sortBy, sortDirection, search, countryId);
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<CityDTO>>builder().data(cities).build());
     }
@@ -48,8 +44,8 @@ public class CityController {
     }
 
     @PutMapping(path = "/{cityId}")
-    public ResponseEntity<ResponseDTO<CityDTO>> updateCity(@Valid @RequestBody CityDTO cityDto,
-                                                           @PathVariable Long cityId) {
+    public ResponseEntity<ResponseDTO<CityDTO>> updateCity(
+            @Valid @RequestBody CityDTO cityDto, @PathVariable Long cityId) {
         CityDTO updatedCity = cityUseCase.updateCity(cityDto, cityId);
         return ResponseEntity.ok(ResponseDTO.<CityDTO>builder().data(updatedCity).build());
     }

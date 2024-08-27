@@ -20,13 +20,13 @@ public class AdminEntity extends BaseAuditing implements AppUserDetails {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUserEntity appUser;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String lastName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 20)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)

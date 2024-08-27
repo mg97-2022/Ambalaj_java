@@ -18,6 +18,7 @@ public class CompanySignupRequestDTO {
     private SignupAppUserDTO user;
 
     @NotBlank(message = "Company name is required.")
+    @Size(min = 2, max = 150, message = "Company name should be between 2 and 150 characters")
     private String name;
 
     @NotNull(message = "Phone numbers is required.")

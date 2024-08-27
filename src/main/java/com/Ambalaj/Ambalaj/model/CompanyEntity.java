@@ -20,7 +20,7 @@ public class CompanyEntity extends BaseAuditing implements AppUserDetails {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUserEntity appUser;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 150)
     private String name;
 
     @Column(nullable = false)
@@ -31,6 +31,7 @@ public class CompanyEntity extends BaseAuditing implements AppUserDetails {
     @Column(name = "phone_number")
     private List<String> phoneNumbers;
 
+    @Column(unique = true)
     private String website;
 
     @Column(nullable = false, unique = true)
@@ -43,15 +44,13 @@ public class CompanyEntity extends BaseAuditing implements AppUserDetails {
     private String address;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "company_category",
-            joinColumns = @JoinColumn(name = "company_id", nullable = false),
+    @JoinTable(name = "company_category", joinColumns = @JoinColumn(name = "company_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false),
             uniqueConstraints = @UniqueConstraint(columnNames = {"company_id", "category_id"}))
     private List<CategoryEntity> categories;
 
     @ManyToMany(cascade = CascadeType.MERGE)
-    @JoinTable(name = "company_industry",
-            joinColumns = @JoinColumn(name = "company_id", nullable = false),
+    @JoinTable(name = "company_industry", joinColumns = @JoinColumn(name = "company_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "industry_id", nullable = false),
             uniqueConstraints = @UniqueConstraint(columnNames = {"company_id", "industry_id"}))
     private List<IndustryEntity> industries;

@@ -45,8 +45,8 @@ public class IndustryController {
     }
 
     @PutMapping(path = "/{industryId}")
-    public ResponseEntity<ResponseDTO<IndustryDTO>> updateIndustry(@Valid @RequestBody IndustryDTO industryDto,
-                                                                   @PathVariable Long industryId) {
+    public ResponseEntity<ResponseDTO<IndustryDTO>> updateIndustry(
+            @Valid @RequestBody IndustryDTO industryDto, @PathVariable Long industryId) {
         IndustryDTO updatedIndustry = industryUseCase.updateIndustry(industryDto, industryId);
         return ResponseEntity.ok(ResponseDTO.<IndustryDTO>builder().data(updatedIndustry).build());
     }

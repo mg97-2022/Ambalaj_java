@@ -48,8 +48,8 @@ public class CountryController {
     }
 
     @PutMapping(path = "/{countryId}")
-    public ResponseEntity<ResponseDTO<CountryDTO>> updateCountry(@Valid @RequestBody CountryDTO countryDTO,
-                                                                 @PathVariable Integer countryId) {
+    public ResponseEntity<ResponseDTO<CountryDTO>> updateCountry(
+            @Valid @RequestBody CountryDTO countryDTO, @PathVariable Integer countryId) {
         CountryDTO updatedCountry = countryUseCase.updateCountry(countryDTO, countryId);
         return ResponseEntity.ok(ResponseDTO.<CountryDTO>builder().data(updatedCountry).build());
     }

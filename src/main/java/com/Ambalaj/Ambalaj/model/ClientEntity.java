@@ -19,11 +19,12 @@ public class ClientEntity extends BaseAuditing implements AppUserDetails {
     @JoinColumn(name = "user_id", nullable = false)
     private AppUserEntity appUser;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String firstName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String lastName;
 
+    @Column(length = 20)
     private String phoneNumber;
 }
