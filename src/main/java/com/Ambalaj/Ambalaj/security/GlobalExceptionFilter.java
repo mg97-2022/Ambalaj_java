@@ -24,8 +24,9 @@ public class GlobalExceptionFilter extends OncePerRequestFilter {
     private final ObjectMapper objectMapper;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
         } catch (CustomException ex) {
@@ -35,10 +36,11 @@ public class GlobalExceptionFilter extends OncePerRequestFilter {
         }
     }
 
-    private void handleException(@NotNull HttpServletResponse response, @NotNull Exception ex,
-                                 @NotNull HttpStatus statusCode, String status) throws IOException {
+    private void handleException(
+            @NotNull HttpServletResponse response, @NotNull Exception ex, @NotNull HttpStatus statusCode,
+            String status) throws IOException {
         ExceptionResponseDTO exceptionResponse = ExceptionResponseDTO.builder().message(ex.getMessage()).status(status)
-                .error(statusCode.getReasonPhrase()).build();
+                                                                     .error(statusCode.getReasonPhrase()).build();
 
         response.setStatus(statusCode.value());
         response.setContentType("application/json");
