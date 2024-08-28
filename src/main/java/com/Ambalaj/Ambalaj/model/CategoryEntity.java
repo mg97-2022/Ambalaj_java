@@ -15,9 +15,16 @@ public class CategoryEntity extends BaseAuditing {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String name;
 
     @ManyToMany(mappedBy = "categories")
     private List<CompanyEntity> companies;
+
+    @OneToMany(mappedBy = "parentCategory", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    private List<CategoryEntity> subCategories;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private CategoryEntity parentCategory;
 }
