@@ -1,5 +1,6 @@
 package com.Ambalaj.Ambalaj.security;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.AppUserEntity;
 import com.Ambalaj.Ambalaj.service.AppUserService;
 import jakarta.servlet.FilterChain;
@@ -24,8 +25,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final AppUserService appUserService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain) throws ServletException, IOException, NotFoundException {
         // 1) Get the JWT token from the request headers
         String token = jwtUtil.getJwtFromRequest(request);
         // SHOULD I THROW ERROR HERE THAT TOKEN IS NOT PROVIDED ?? (QUESTION)

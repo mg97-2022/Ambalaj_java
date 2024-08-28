@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "api/v1/size")
+@RequestMapping("api/v1/size")
 public class SizeController {
     private final SizeUseCase sizeUseCase;
 
@@ -30,20 +30,20 @@ public class SizeController {
         return ResponseEntity.ok(ResponseDTO.<List<SizeDTO>>builder().data(sizes).build());
     }
 
-    @GetMapping(path = "/{sizeId}")
+    @GetMapping("/{sizeId}")
     public ResponseEntity<ResponseDTO<SizeDTO>> getSize(@PathVariable Integer sizeId) {
         SizeDTO size = sizeUseCase.getSize(sizeId);
         return ResponseEntity.ok(ResponseDTO.<SizeDTO>builder().data(size).build());
     }
 
-    @PutMapping(path = "/{sizeId}")
+    @PutMapping("/{sizeId}")
     public ResponseEntity<ResponseDTO<SizeDTO>> updateSize(
             @Valid @RequestBody SizeDTO sizeDto, @PathVariable Integer sizeId) {
         SizeDTO updatedSize = sizeUseCase.updateSize(sizeDto, sizeId);
         return ResponseEntity.ok(ResponseDTO.<SizeDTO>builder().data(updatedSize).build());
     }
 
-    @DeleteMapping(path = "/{sizeId}")
+    @DeleteMapping("/{sizeId}")
     public ResponseEntity<Void> deleteSize(@PathVariable Integer sizeId) {
         sizeUseCase.deleteSize(sizeId);
         return ResponseEntity.noContent().build();

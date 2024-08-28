@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/industry")
+@RequestMapping("api/v1/industry")
 @RequiredArgsConstructor
 public class IndustryController {
     private final IndustryUseCase industryUseCase;
@@ -38,20 +38,20 @@ public class IndustryController {
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<IndustryDTO>>builder().data(industries).build());
     }
 
-    @GetMapping(path = "/{industryId}")
+    @GetMapping("/{industryId}")
     public ResponseEntity<ResponseDTO<IndustryDTO>> getIndustry(@PathVariable Long industryId) {
         IndustryDTO industry = industryUseCase.getIndustry(industryId);
         return ResponseEntity.ok(ResponseDTO.<IndustryDTO>builder().data(industry).build());
     }
 
-    @PutMapping(path = "/{industryId}")
+    @PutMapping("/{industryId}")
     public ResponseEntity<ResponseDTO<IndustryDTO>> updateIndustry(
             @Valid @RequestBody IndustryDTO industryDto, @PathVariable Long industryId) {
         IndustryDTO updatedIndustry = industryUseCase.updateIndustry(industryDto, industryId);
         return ResponseEntity.ok(ResponseDTO.<IndustryDTO>builder().data(updatedIndustry).build());
     }
 
-    @DeleteMapping(path = "/{industryId}")
+    @DeleteMapping("/{industryId}")
     public ResponseEntity<Void> deleteIndustry(@PathVariable Long industryId) {
         industryUseCase.deleteIndustry(industryId);
         return ResponseEntity.noContent().build();

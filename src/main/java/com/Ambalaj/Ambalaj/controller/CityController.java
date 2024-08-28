@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = "api/v1/city")
+@RequestMapping("api/v1/city")
 @Validated
 public class CityController {
     private final CityUseCase cityUseCase;
@@ -37,20 +37,20 @@ public class CityController {
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<CityDTO>>builder().data(cities).build());
     }
 
-    @GetMapping(path = "/{cityId}")
+    @GetMapping("/{cityId}")
     public ResponseEntity<ResponseDTO<CityDTO>> getCity(@PathVariable Long cityId) {
         CityDTO city = cityUseCase.getCity(cityId);
         return ResponseEntity.ok(ResponseDTO.<CityDTO>builder().data(city).build());
     }
 
-    @PutMapping(path = "/{cityId}")
+    @PutMapping("/{cityId}")
     public ResponseEntity<ResponseDTO<CityDTO>> updateCity(
             @Valid @RequestBody CityDTO cityDto, @PathVariable Long cityId) {
         CityDTO updatedCity = cityUseCase.updateCity(cityDto, cityId);
         return ResponseEntity.ok(ResponseDTO.<CityDTO>builder().data(updatedCity).build());
     }
 
-    @DeleteMapping(path = "/{cityId}")
+    @DeleteMapping("/{cityId}")
     public ResponseEntity<Void> deleteCity(@PathVariable Long cityId) {
         cityUseCase.deleteCity(cityId);
         return ResponseEntity.noContent().build();

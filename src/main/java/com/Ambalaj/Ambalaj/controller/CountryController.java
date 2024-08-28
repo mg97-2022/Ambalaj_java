@@ -14,10 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping(path = "api/v1/country")
+@RequestMapping("api/v1/country")
 @RequiredArgsConstructor
 @Validated
 public class CountryController {
@@ -41,20 +39,20 @@ public class CountryController {
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<CountryDTO>>builder().data(countries).build());
     }
 
-    @GetMapping(path = "/{countryId}")
+    @GetMapping("/{countryId}")
     public ResponseEntity<ResponseDTO<CountryDTO>> getCountry(@PathVariable Integer countryId) {
         CountryDTO country = countryUseCase.getCountry(countryId);
         return ResponseEntity.ok(ResponseDTO.<CountryDTO>builder().data(country).build());
     }
 
-    @PutMapping(path = "/{countryId}")
+    @PutMapping("/{countryId}")
     public ResponseEntity<ResponseDTO<CountryDTO>> updateCountry(
             @Valid @RequestBody CountryDTO countryDTO, @PathVariable Integer countryId) {
         CountryDTO updatedCountry = countryUseCase.updateCountry(countryDTO, countryId);
         return ResponseEntity.ok(ResponseDTO.<CountryDTO>builder().data(updatedCountry).build());
     }
 
-    @DeleteMapping(path = "/{countryId}")
+    @DeleteMapping("/{countryId}")
     public ResponseEntity<Void> deleteCountry(@PathVariable Integer countryId) {
         countryUseCase.deleteCountry(countryId);
         return ResponseEntity.noContent().build();
