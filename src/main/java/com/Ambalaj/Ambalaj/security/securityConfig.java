@@ -37,7 +37,9 @@ public class securityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(@NotNull HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults()) // Enable CORS
-            .authorizeHttpRequests((requests) -> requests.requestMatchers("/api/v*/auth/**").permitAll()
+            .authorizeHttpRequests((requests) -> requests.requestMatchers(HttpMethod.GET, "/files/**").permitAll()
+                                                         .requestMatchers("/files/**").authenticated()
+                                                         .requestMatchers("/api/v*/auth/**").permitAll()
                                                          .requestMatchers(HttpMethod.GET, "/api/v*/country").permitAll()
                                                          .requestMatchers("/api/v*/country/**")
                                                          .hasRole(AppUserType.ADMIN.name())
