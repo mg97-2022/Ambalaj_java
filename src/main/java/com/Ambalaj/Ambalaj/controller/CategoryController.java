@@ -1,35 +1,40 @@
 package com.Ambalaj.Ambalaj.controller;
 
 import com.Ambalaj.Ambalaj.dto.CategoryDTO;
+import com.Ambalaj.Ambalaj.dto.CategoryRequestDTO;
 import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 import com.Ambalaj.Ambalaj.dto.ResponseDTO;
+import com.Ambalaj.Ambalaj.interfaces.Create;
+import com.Ambalaj.Ambalaj.interfaces.Update;
 import com.Ambalaj.Ambalaj.useCase.CategoryUseCase;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "api/v1/category")
+@RequestMapping("api/v1/category")
 @RequiredArgsConstructor
 @Validated
 public class CategoryController {
     private final CategoryUseCase categoryUseCase;
 
-    @PostMapping
-    public ResponseEntity<ResponseDTO<CategoryDTO>> addCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
-        CategoryDTO addedCategory = categoryUseCase.addCategory(categoryDTO);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ResponseDTO<CategoryDTO>> addCategory(
+            @Validated(Create.class) @ModelAttribute CategoryRequestDTO categoryRequestDTO) throws IOException {
+        CategoryDTO addedCategory = categoryUseCase.addCategory(categoryRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .body(ResponseDTO.<CategoryDTO>builder().data(addedCategory).build());
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping("/all")
     public ResponseEntity<ResponseDTO<List<CategoryDTO>>> getAllCategories(
             @RequestParam(defaultValue = "false", required = false) boolean parentOnly) {
         List<CategoryDTO> allCategories = categoryUseCase.getAllCategories(parentOnly);
@@ -48,20 +53,21 @@ public class CategoryController {
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<CategoryDTO>>builder().data(categories).build());
     }
 
-    @GetMapping(path = "/{categoryId}")
+    @GetMapping("/{categoryId}")
     public ResponseEntity<ResponseDTO<CategoryDTO>> getCategory(@PathVariable Long categoryId) {
         CategoryDTO category = categoryUseCase.getCategory(categoryId);
         return ResponseEntity.ok(ResponseDTO.<CategoryDTO>builder().data(category).build());
     }
 
-    @PutMapping(path = "/{categoryId}")
+    @PutMapping("/{categoryId}")
     public ResponseEntity<ResponseDTO<CategoryDTO>> updateCategory(
-            @Valid @RequestBody CategoryDTO categoryDto, @PathVariable Long categoryId) {
-        CategoryDTO updatedCategory = categoryUseCase.updateCategory(categoryDto, categoryId);
+            @Validated(Update.class) @ModelAttribute CategoryRequestDTO categoryRequestDTO,
+            @PathVariable Long categoryId) throws IOException {
+        CategoryDTO updatedCategory = categoryUseCase.updateCategory(categoryRequestDTO, categoryId);
         return ResponseEntity.ok(ResponseDTO.<CategoryDTO>builder().data(updatedCategory).build());
     }
 
-    @DeleteMapping(path = "/{categoryId}")
+    @DeleteMapping("/{categoryId}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
         categoryUseCase.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();

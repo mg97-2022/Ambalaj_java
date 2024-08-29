@@ -18,10 +18,13 @@ public class CategoryEntity extends BaseAuditing {
     @Column(nullable = false, unique = true, length = 100)
     private String name;
 
+    @Column(nullable = false)
+    private String image;
+
     @ManyToMany(mappedBy = "categories")
     private List<CompanyEntity> companies;
 
-    @OneToMany(mappedBy = "parentCategory", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "parentCategory", cascade = {CascadeType.MERGE})
     private List<CategoryEntity> subCategories;
 
     @ManyToOne

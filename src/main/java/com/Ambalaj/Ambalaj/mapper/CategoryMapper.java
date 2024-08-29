@@ -1,6 +1,7 @@
 package com.Ambalaj.Ambalaj.mapper;
 
 import com.Ambalaj.Ambalaj.dto.CategoryDTO;
+import com.Ambalaj.Ambalaj.dto.CategoryRequestDTO;
 import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 import com.Ambalaj.Ambalaj.model.CategoryEntity;
 import org.mapstruct.Mapper;
@@ -14,6 +15,9 @@ public interface CategoryMapper {
     CategoryDTO toDto(CategoryEntity categoryEntity);
 
     CategoryEntity toEntity(CategoryDTO categoryDTO);
+
+    @Mapping(target = "image", ignore = true)
+    CategoryEntity toEntityFromCategoryRequestDTO(CategoryRequestDTO categoryRequestDTO);
 
     List<CategoryDTO> toListDto(List<CategoryEntity> categoryEntities);
 

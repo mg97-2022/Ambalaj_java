@@ -1,84 +1,69 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.CategoryEntity;
 import com.Ambalaj.Ambalaj.repository.CategoryRepository;
 import com.Ambalaj.Ambalaj.service.CategoryService;
+import com.Ambalaj.Ambalaj.utils.FileUtil;
 import com.Ambalaj.Ambalaj.utils.JpaFeatures;
-import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl extends BaseServiceWithPaginationImpl<CategoryEntity, Long> implements CategoryService {
+public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final JpaFeatures jpaFeatures;
+    private final FileUtil fileUtil;
 
-    @Override
-    public JpaRepository<CategoryEntity, Long> getRepository() {
-        return categoryRepository;
+    private Specification<CategoryEntity> getSearchSpecification(String search) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.toLowerCase() + "%"));
     }
 
-    @Override
-    protected JpaSpecificationExecutor<CategoryEntity> getSpecificationExecutor() {
-        return categoryRepository;
-    }
-
-    @Override
-    protected Specification<CategoryEntity> getSearchSpecification(String search) {
-        return (root, query, criteriaBuilder) -> {
-            Predicate predicate = criteriaBuilder.conjunction();
-            if (search != null && !search.trim().isEmpty()) {
-                String searchPattern = "%" + search.toLowerCase() + "%";
-                predicate = criteriaBuilder.and(
-                        criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), searchPattern));
-            }
-
-            return predicate;
-        };
-    }
-
-    @Override
     public CategoryEntity addCategory(CategoryEntity categoryEntity) {
-        return addEntity(categoryEntity);
+        return categoryRepository.save(categoryEntity);
     }
 
-    @Override
     public List<CategoryEntity> getAllCategories(boolean parentOnly) {
-        return parentOnly ? categoryRepository.findByParentCategoryIsNull() : getEntities();
+        return parentOnly ? categoryRepository.findByParentCategoryIsNull() : categoryRepository.findAll();
     }
 
-    @Override
     public Page<CategoryEntity> getCategories(
             Integer page, Integer pageSize, String sortBy, String sortDirection, String search) {
-        return getPaginatedSortedSearchableEntities(page, pageSize, sortBy, sortDirection, search);
+        Pageable pageable = jpaFeatures.getPaginationWithSort(page, pageSize, sortBy, sortDirection);
+        if (search != null && !search.trim().isEmpty()) {
+            return categoryRepository.findAll(getSearchSpecification(search), pageable);
+        }
+        return categoryRepository.findAll(pageable);
     }
 
-    @Override
     public CategoryEntity getCategory(Long categoryId) {
-        return getEntityById(categoryId, "Category");
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException("Category", categoryId));
     }
 
-    @Override
-    protected void updateEntityFields(CategoryEntity existingCategory, CategoryEntity updatedCategory) {
+    public CategoryEntity updateCategory(CategoryEntity updatedCategory, Long categoryId) {
+        CategoryEntity existingCategory = this.getCategory(categoryId);
+        String existingCategoryImage = existingCategory.getImage();
         existingCategory.setName(updatedCategory.getName());
+        if (updatedCategory.getImage() != null) existingCategory.setImage(updatedCategory.getImage());
         existingCategory.setParentCategory(updatedCategory.getParentCategory());
+        CategoryEntity savedCategory = categoryRepository.save(existingCategory);
+        if (!savedCategory.getImage().equals(existingCategoryImage)) {
+            fileUtil.deleteFile(existingCategoryImage);
+        }
+        return savedCategory;
     }
 
-    @Override
-    public CategoryEntity updateCategory(CategoryEntity categoryEntity, Long categoryId) {
-        return updateEntity(categoryEntity, categoryId, "Category");
-    }
-
-    @Override
     public void deleteCategory(Long categoryId) {
-        deleteEntity(categoryId, "Category");
+        CategoryEntity existingCategory = this.getCategory(categoryId);
+        categoryRepository.deleteById(categoryId);
+        fileUtil.deleteFileAsync(existingCategory.getImage());
     }
 }
 
