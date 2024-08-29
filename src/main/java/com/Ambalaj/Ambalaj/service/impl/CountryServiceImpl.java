@@ -1,66 +1,52 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.CountryEntity;
 import com.Ambalaj.Ambalaj.repository.CountryRepository;
 import com.Ambalaj.Ambalaj.service.CountryService;
+import com.Ambalaj.Ambalaj.utils.JpaFeatures;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CountryServiceImpl extends BaseServiceWithPaginationImpl<CountryEntity, Integer> implements CountryService {
+public class CountryServiceImpl implements CountryService {
     private final CountryRepository countryRepository;
+    private final JpaFeatures jpaFeatures;
 
-    @Override
-    protected JpaRepository<CountryEntity, Integer> getRepository() {
-        return countryRepository;
+    private Specification<CountryEntity> getSearchSpecification(String search) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.or(
+                criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + search.toLowerCase() + "%"));
     }
 
-    @Override
-    protected JpaSpecificationExecutor<CountryEntity> getSpecificationExecutor() {
-        return countryRepository;
-    }
-
-    @Override
-    protected Specification<CountryEntity> getSearchSpecification(String search) {
-        return (root, query, criteriaBuilder) -> {
-            String searchPattern = "%" + search.toLowerCase() + "%";
-            return criteriaBuilder.or(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), searchPattern));
-        };
-    }
-
-    @Override
     public CountryEntity addCountry(CountryEntity country) {
-        return addEntity(country);
+        return countryRepository.save(country);
     }
 
-    @Override
-    public Page<CountryEntity> getCountries(Integer page, Integer pageSize, String sortBy, String sortDirection,
-                                            String search) {
-        return getPaginatedSortedSearchableEntities(page, pageSize, sortBy, sortDirection, search);
+    public Page<CountryEntity> getCountries(
+            Integer page, Integer pageSize, String sortBy, String sortDirection, String search) {
+        Pageable pageable = jpaFeatures.getPaginationWithSort(page, pageSize, sortBy, sortDirection);
+        if (search != null && !search.trim().isEmpty()) {
+            return countryRepository.findAll(getSearchSpecification(search), pageable);
+        }
+        return countryRepository.findAll(pageable);
     }
 
-    @Override
     public CountryEntity getCountry(Integer countryId) {
-        return getEntityById(countryId, "Country");
+        return countryRepository.findById(countryId).orElseThrow(() -> new NotFoundException("Country", countryId));
     }
 
-    @Override
-    protected void updateEntityFields(CountryEntity existingCountry, CountryEntity updatedCountry) {
+    public CountryEntity updateCountry(CountryEntity updatedCountry, Integer countryId) {
+        CountryEntity existingCountry = this.getCountry(countryId);
         existingCountry.setName(updatedCountry.getName());
+        return countryRepository.save(existingCountry);
     }
 
-    @Override
-    public CountryEntity updateCountry(CountryEntity countryEntity, Integer countryId) {
-        return updateEntity(countryEntity, countryId, "Country");
-    }
-
-    @Override
     public void deleteCountry(Integer countryId) {
-        deleteEntity(countryId, "Country");
+        if (!countryRepository.existsById(countryId)) throw new NotFoundException("Country", countryId);
+        countryRepository.deleteById(countryId);
     }
 }

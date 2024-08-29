@@ -1,51 +1,39 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.SizeEntity;
 import com.Ambalaj.Ambalaj.repository.SizeRepository;
 import com.Ambalaj.Ambalaj.service.SizeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class SizeServiceImpl extends BaseServiceImpl<SizeEntity, Integer> implements SizeService {
+public class SizeServiceImpl implements SizeService {
     private final SizeRepository sizeRepository;
 
-    @Override
-    protected JpaRepository<SizeEntity, Integer> getRepository() {
-        return sizeRepository;
-    }
-
-    @Override
     public SizeEntity addSize(SizeEntity sizeEntity) {
-        return addEntity(sizeEntity);
+        return sizeRepository.save(sizeEntity);
     }
 
-    @Override
     public List<SizeEntity> getAllSizes() {
-        return getEntities();
+        return sizeRepository.findAll();
     }
 
-    @Override
     public SizeEntity getSize(Integer sizeId) {
-        return getEntityById(sizeId, "Size");
+        return sizeRepository.findById(sizeId).orElseThrow(() -> new NotFoundException("Size", sizeId));
     }
 
-    @Override
-    protected void updateEntityFields(SizeEntity existingSize, SizeEntity updatedSize) {
+    public SizeEntity updateSize(SizeEntity updatedSize, Integer sizeId) {
+        SizeEntity existingSize = this.getSize(sizeId);
         existingSize.setName(updatedSize.getName());
+        return sizeRepository.save(existingSize);
     }
 
-    @Override
-    public SizeEntity updateSize(SizeEntity sizeEntity, Integer sizeId) {
-        return updateEntity(sizeEntity, sizeId, "Size");
-    }
-
-    @Override
     public void deleteSize(Integer sizeId) {
-        deleteEntity(sizeId, "Size");
+        if (!sizeRepository.existsById(sizeId)) throw new NotFoundException("Size", sizeId);
+        sizeRepository.deleteById(sizeId);
     }
 }

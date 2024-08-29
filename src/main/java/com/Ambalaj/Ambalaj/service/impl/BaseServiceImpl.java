@@ -20,28 +20,30 @@ public abstract class BaseServiceImpl<T, Id> implements BaseService<T, Id> {
         return getRepository().findAll();
     }
 
-    Id getId(T entity) {
-        return null;
-    }
-
     @Override
     public T getEntityById(Id entityId, String entityName) {
         return getRepository().findById(entityId).orElseThrow(() -> new NotFoundException(entityName, entityId));
     }
 
-    void updateEntityFields(T existingEntity, T updatedEntity) {
-    }
+    void updateEntityFields(T existingEntity, T updatedEntity) {}
+
+    void afterEntityUpdate(T oldEntity) {}
 
     @Override
     public T updateEntity(T updatedEntity, Id entityId, String entityName) {
         T existingEntity = this.getEntityById(entityId, entityName);
         updateEntityFields(existingEntity, updatedEntity);
-        return getRepository().save(existingEntity);
+        T result = getRepository().save(existingEntity);
+        afterEntityUpdate(existingEntity);
+        return result;
     }
 
     @Override
     public void deleteEntity(Id entityId, String entityName) {
-        if (!getRepository().existsById(entityId)) throw new NotFoundException(entityName, entityId);
+        T existingEntity = this.getEntityById(entityId, entityName);
         getRepository().deleteById(entityId);
+        afterEntityDelete(existingEntity);
     }
+
+    void afterEntityDelete(T deletedEntity) {}
 }

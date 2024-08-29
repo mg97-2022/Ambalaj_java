@@ -1,52 +1,40 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.ColorEntity;
 import com.Ambalaj.Ambalaj.repository.ColorRepository;
 import com.Ambalaj.Ambalaj.service.ColorService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ColorServiceImpl extends BaseServiceImpl<ColorEntity, Integer> implements ColorService {
+public class ColorServiceImpl implements ColorService {
     private final ColorRepository colorRepository;
 
-    @Override
-    protected JpaRepository<ColorEntity, Integer> getRepository() {
-        return colorRepository;
-    }
-
-    @Override
     public ColorEntity addColor(ColorEntity colorEntity) {
-        return addEntity(colorEntity);
+        return colorRepository.save(colorEntity);
     }
 
-    @Override
     public List<ColorEntity> getAllColors() {
-        return getEntities();
+        return colorRepository.findAll();
     }
 
-    @Override
     public ColorEntity getColor(Integer colorId) {
-        return getEntityById(colorId, "Color");
+        return colorRepository.findById(colorId).orElseThrow(() -> new NotFoundException("Color", colorId));
     }
 
-    @Override
-    protected void updateEntityFields(ColorEntity existingColor, ColorEntity updatedColor) {
+    public ColorEntity updateColor(ColorEntity updatedColor, Integer colorId) {
+        ColorEntity existingColor = this.getColor(colorId);
         existingColor.setName(updatedColor.getName());
         existingColor.setHexCode(updatedColor.getHexCode());
+        return colorRepository.save(existingColor);
     }
 
-    @Override
-    public ColorEntity updateColor(ColorEntity colorEntity, Integer colorId) {
-        return updateEntity(colorEntity, colorId, "Color");
-    }
-
-    @Override
     public void deleteColor(Integer colorId) {
-        deleteEntity(colorId, "Color");
+        if (!colorRepository.existsById(colorId)) throw new NotFoundException("Color", colorId);
+        colorRepository.deleteById(colorId);
     }
 }
