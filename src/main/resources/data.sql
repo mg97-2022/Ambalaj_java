@@ -7,3 +7,5 @@ VALUES ('46e29bb7-37f9-4d2e-ba1d-6199cf4b37f7', true, false, 'EMAIL', 'admin@amb
 
 INSERT INTO admins(user_id, first_name, last_name, phone_number, role)
 VALUES ('46e29bb7-37f9-4d2e-ba1d-6199cf4b37f7', 'Mohamed', 'Gamal', '01000000', 'ADMIN');
+
+insert into materials_specifications_names (name, type) values ('specification 1', 'TEXT'), ('specification 2', 'TEXT'), ('specification 3', 'COLOR');

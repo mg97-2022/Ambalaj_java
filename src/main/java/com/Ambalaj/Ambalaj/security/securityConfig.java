@@ -60,6 +60,16 @@ public class securityConfig {
                                                          .requestMatchers(HttpMethod.GET, "/api/v*/size").permitAll()
                                                          .requestMatchers("/api/v*/size/**")
                                                          .hasRole(AppUserType.ADMIN.name())
+                                                         .requestMatchers(HttpMethod.GET,
+                                                                          "/api/v*/material-specification-name")
+                                                         .permitAll()
+                                                         .requestMatchers("/api/v*/material-specification-name/**")
+                                                         .hasRole(AppUserType.ADMIN.name())
+                                                         .requestMatchers(HttpMethod.GET,
+                                                                          "/api/v*/material")
+                                                         .permitAll()
+                                                         .requestMatchers("/api/v*/material/**")
+                                                         .hasRole(AppUserType.ADMIN.name())
                                                          .requestMatchers("/swagger-ui/**").permitAll()
                                                          .requestMatchers("/api-docs/**").permitAll().anyRequest()
                                                          .authenticated())

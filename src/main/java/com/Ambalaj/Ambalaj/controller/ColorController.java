@@ -26,8 +26,7 @@ public class ColorController {
     @GetMapping
     public ResponseEntity<ResponseDTO<List<ColorDTO>>> getAllColors() {
         List<ColorDTO> colors = colorUseCase.getAllColors();
-        return ResponseEntity.status(HttpStatus.CREATED)
-                             .body(ResponseDTO.<List<ColorDTO>>builder().data(colors).build());
+        return ResponseEntity.ok(ResponseDTO.<List<ColorDTO>>builder().data(colors).build());
     }
 
     @GetMapping("/{colorId}")

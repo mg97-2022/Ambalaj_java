@@ -8,6 +8,7 @@ import com.Ambalaj.Ambalaj.model.CategoryEntity;
 import com.Ambalaj.Ambalaj.service.CategoryService;
 import com.Ambalaj.Ambalaj.useCase.CategoryUseCase;
 import com.Ambalaj.Ambalaj.utils.FileUtil;
+import com.Ambalaj.Ambalaj.utils.FilesFolders;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,7 @@ public class CategoryUseCaseImpl implements CategoryUseCase {
 
     @Override
     public CategoryDTO addCategory(CategoryRequestDTO categoryRequestDTO) throws IOException {
-        String image = fileUtil.saveFile(categoryRequestDTO.getImage(), "images/categories/");
+        String image = fileUtil.saveFile(categoryRequestDTO.getImage(), FilesFolders.CATEGORIES_FOLDER);
         try {
             CategoryEntity categoryEntity = categoryMapper.toEntityFromCategoryRequestDTO(categoryRequestDTO);
             categoryEntity.setImage(image);
