@@ -1,9 +1,9 @@
 package com.Ambalaj.Ambalaj.model;
 
 import com.Ambalaj.Ambalaj.auditing.BaseAuditing;
-import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.PlanPriorityNumber;
 import com.Ambalaj.Ambalaj.enums.PlanStatus;
+import com.Ambalaj.Ambalaj.enums.WebsiteUserType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -34,7 +34,7 @@ public class PlanEntity extends BaseAuditing {
     private Boolean isPopular;
 
     @Enumerated(EnumType.STRING)
-    private AppUserType accountType;
+    private WebsiteUserType accountType;
 
     private Integer productsNumberToCreate;
 

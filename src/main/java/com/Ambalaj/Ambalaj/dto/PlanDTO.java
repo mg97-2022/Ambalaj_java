@@ -1,8 +1,8 @@
 package com.Ambalaj.Ambalaj.dto;
 
-import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.PlanPriorityNumber;
 import com.Ambalaj.Ambalaj.enums.PlanStatus;
+import com.Ambalaj.Ambalaj.enums.WebsiteUserType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -33,7 +33,7 @@ public class PlanDTO {
     private Boolean isPopular;
 
     @NotNull(message = "Account type is required")
-    private AppUserType accountType;
+    private WebsiteUserType accountType;
 
     // Used with company account type
     // Could be validated with annotation on the class level
@@ -41,7 +41,7 @@ public class PlanDTO {
     @Positive(message = "Products number to create must be positive")
     private Integer productsNumberToCreate;
 
-    private Integer priorityNumber;
+    private PlanPriorityNumber priorityNumber;
 
     private PlanStatus status;
 }
