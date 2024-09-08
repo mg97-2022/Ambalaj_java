@@ -1,6 +1,7 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
 import com.Ambalaj.Ambalaj.enums.PlanStatus;
+import com.Ambalaj.Ambalaj.enums.WebsiteAccountType;
 import com.Ambalaj.Ambalaj.exception.NotFoundException;
 import com.Ambalaj.Ambalaj.model.PlanEntity;
 import com.Ambalaj.Ambalaj.repository.PlanRepository;
@@ -46,5 +47,11 @@ public class PlanServiceImpl implements PlanService {
         PlanEntity existingPlan = this.getPlan(planId);
         existingPlan.setStatus(PlanStatus.DELETED);
         planRepository.save(existingPlan);
+    }
+
+    @Override
+    public PlanEntity getFreeActivePlan(WebsiteAccountType accountType) {
+        return planRepository.findFreeActivePlan(accountType)
+                             .orElseThrow(() -> new NotFoundException("Free active"));
     }
 }

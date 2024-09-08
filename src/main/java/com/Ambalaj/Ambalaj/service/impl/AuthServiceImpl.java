@@ -3,6 +3,7 @@ package com.Ambalaj.Ambalaj.service.impl;
 import com.Ambalaj.Ambalaj.dto.*;
 import com.Ambalaj.Ambalaj.enums.AppUserType;
 import com.Ambalaj.Ambalaj.enums.AppUserTokenTypes;
+import com.Ambalaj.Ambalaj.enums.WebsiteAccountType;
 import com.Ambalaj.Ambalaj.exception.*;
 import com.Ambalaj.Ambalaj.mapper.AdminMapper;
 import com.Ambalaj.Ambalaj.mapper.AppUserMapper;
@@ -42,6 +43,9 @@ public class AuthServiceImpl implements AuthService {
     private final CompanyMapper companyMapper;
     private final ClientMapper clientMapper;
     private final AdminMapper adminMapper;
+    private final PlanService planService;
+    private final SubscriptionService subscriptionService;
+    private final CompanyProductsNumberToCreateService companyProductsNumberToCreateService;
 
     @Value("${spring.app.clientUrl}")
     private String clientUrl;
@@ -100,6 +104,7 @@ public class AuthServiceImpl implements AuthService {
         if (user.getTokenExpiresAt().isBefore(LocalDateTime.now())) throw new InvalidDataException("Token is expired.");
         user.setEnabled(true);
         resetUserTokenAndSaveUser(user);
+        addSubscriptionForUserAfterEmailConfirm(user);
     }
 
     @Override
@@ -186,5 +191,24 @@ public class AuthServiceImpl implements AuthService {
         String link = clientUrl + "/reset-password?resetToken=" + token;
         String body = emailTemplates.emailTemplate(userName, link);
         emailService.send(email, body, subject);
+    }
+
+    private void addSubscriptionForUserAfterEmailConfirm(AppUserEntity appUserEntity) {
+        WebsiteAccountType accountType =
+                appUserEntity.getType().equals(AppUserType.COMPANY) ? WebsiteAccountType.COMPANY :
+                        WebsiteAccountType.CLIENT;
+        PlanEntity freePlan = planService.getFreeActivePlan(accountType);
+        // Add subscription with free plan for new user
+        SubscriptionEntity subscription = new SubscriptionEntity();
+        subscription.setUser(appUserEntity);
+        subscription.setPlan(freePlan);
+        subscription.setEndDate(LocalDateTime.now().plusMonths(1));
+        subscriptionService.addSubscription(subscription);
+        // Add products number to create for company
+        if (!appUserEntity.getType().equals(AppUserType.COMPANY)) return;
+        CompanyProductsNumberToCreateEntity companyProductsNumberToCreate = new CompanyProductsNumberToCreateEntity();
+        companyProductsNumberToCreate.setAppUser(appUserEntity);
+        companyProductsNumberToCreate.setProductsNumber(freePlan.getProductsNumberToCreate());
+        companyProductsNumberToCreateService.addCompanyProductsNumberToCreate(companyProductsNumberToCreate);
     }
 }

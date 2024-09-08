@@ -34,7 +34,6 @@ public class CompanySignupRequestDTO {
     @NotBlank(message = "Tax number is required.")
     private String taxNumber;
 
-    @Valid
     @NotNull(message = "City is required.")
     private CityDTO city;
 

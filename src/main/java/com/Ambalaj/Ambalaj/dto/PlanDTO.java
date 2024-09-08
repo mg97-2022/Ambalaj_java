@@ -2,7 +2,7 @@ package com.Ambalaj.Ambalaj.dto;
 
 import com.Ambalaj.Ambalaj.enums.PlanPriorityNumber;
 import com.Ambalaj.Ambalaj.enums.PlanStatus;
-import com.Ambalaj.Ambalaj.enums.WebsiteUserType;
+import com.Ambalaj.Ambalaj.enums.WebsiteAccountType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
@@ -33,7 +33,7 @@ public class PlanDTO {
     private Boolean isPopular;
 
     @NotNull(message = "Account type is required")
-    private WebsiteUserType accountType;
+    private WebsiteAccountType accountType;
 
     // Used with company account type
     // Could be validated with annotation on the class level

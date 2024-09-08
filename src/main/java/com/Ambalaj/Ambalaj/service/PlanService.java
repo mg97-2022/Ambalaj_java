@@ -1,5 +1,6 @@
 package com.Ambalaj.Ambalaj.service;
 
+import com.Ambalaj.Ambalaj.enums.WebsiteAccountType;
 import com.Ambalaj.Ambalaj.model.PlanEntity;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface PlanService {
     PlanEntity updatePlan(PlanEntity planEntity, Integer planId);
 
     void deletePlan(Integer planId);
+
+    PlanEntity getFreeActivePlan(WebsiteAccountType accountType);
 }
