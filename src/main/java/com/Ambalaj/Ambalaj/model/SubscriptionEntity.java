@@ -32,5 +32,6 @@ public class SubscriptionEntity {
     private LocalDateTime endDate;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PlanSubscriptionStatus status = PlanSubscriptionStatus.ACTIVE;
 }

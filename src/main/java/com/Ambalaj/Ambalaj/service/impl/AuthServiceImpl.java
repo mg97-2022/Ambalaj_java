@@ -206,8 +206,9 @@ public class AuthServiceImpl implements AuthService {
         subscriptionService.addSubscription(subscription);
         // Add products number to create for company
         if (!appUserEntity.getType().equals(AppUserType.COMPANY)) return;
+        CompanyEntity companyEntity = companyService.findByAppUser(appUserEntity);
         CompanyProductsNumberToCreateEntity companyProductsNumberToCreate = new CompanyProductsNumberToCreateEntity();
-        companyProductsNumberToCreate.setAppUser(appUserEntity);
+        companyProductsNumberToCreate.setCompany(companyEntity);
         companyProductsNumberToCreate.setProductsNumber(freePlan.getProductsNumberToCreate());
         companyProductsNumberToCreateService.addCompanyProductsNumberToCreate(companyProductsNumberToCreate);
     }

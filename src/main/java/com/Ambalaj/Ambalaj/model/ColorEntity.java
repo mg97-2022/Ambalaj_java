@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @Entity
 @Table(name = "colors")
 @Data
@@ -19,4 +21,7 @@ public class ColorEntity extends BaseAuditing {
 
     @Column(unique = true, nullable = false, length = 9)
     private String hexCode;
+
+    @ManyToMany(mappedBy = "colors")
+    private List<ProductEntity> products;
 }

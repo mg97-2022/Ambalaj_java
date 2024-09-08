@@ -1,5 +1,7 @@
 package com.Ambalaj.Ambalaj.service.impl;
 
+import com.Ambalaj.Ambalaj.exception.NotFoundException;
+import com.Ambalaj.Ambalaj.model.CompanyEntity;
 import com.Ambalaj.Ambalaj.model.CompanyProductsNumberToCreateEntity;
 import com.Ambalaj.Ambalaj.repository.CompanyProductsNumberToCreateRepository;
 import com.Ambalaj.Ambalaj.service.CompanyProductsNumberToCreateService;
@@ -13,6 +15,17 @@ public class CompanyProductsNumberToCreateServiceImpl implements CompanyProducts
 
     @Override
     public void addCompanyProductsNumberToCreate(CompanyProductsNumberToCreateEntity companyProductsNumberToCreate) {
+        companyProductsNumberToCreateRepository.save(companyProductsNumberToCreate);
+    }
+
+    @Override
+    public CompanyProductsNumberToCreateEntity getByCompany(CompanyEntity companyEntity) {
+        return companyProductsNumberToCreateRepository.findByCompany(companyEntity)
+                                                      .orElseThrow(() -> new NotFoundException("Company"));
+    }
+
+    @Override
+    public void updateCompanyProductsNumberToCreate(CompanyProductsNumberToCreateEntity companyProductsNumberToCreate) {
         companyProductsNumberToCreateRepository.save(companyProductsNumberToCreate);
     }
 }

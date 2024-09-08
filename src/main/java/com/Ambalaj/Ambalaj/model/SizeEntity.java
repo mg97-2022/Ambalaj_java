@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @Entity
 @Table(name = "sizes")
 @Data
@@ -16,4 +18,7 @@ public class SizeEntity extends BaseAuditing {
 
     @Column(nullable = false, unique = true, length = 15)
     private String name;
+
+    @ManyToMany(mappedBy = "sizes")
+    private List<ProductEntity> products;
 }

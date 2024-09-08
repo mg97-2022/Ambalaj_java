@@ -4,4 +4,6 @@ public class FilesFolders {
     public final static String CATEGORIES_FOLDER = "images/categories/";
 
     public final static String MATERIALS_FOLDER = "images/materials/";
+
+    public final static String PRODUCTS_FOLDER = "images/products/";
 }

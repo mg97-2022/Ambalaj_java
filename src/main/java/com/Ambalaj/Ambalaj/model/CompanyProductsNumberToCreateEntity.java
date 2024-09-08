@@ -10,12 +10,12 @@ import java.util.UUID;
 @Data
 public class CompanyProductsNumberToCreateEntity {
     @Id
-    private UUID id;
+    private Long id;
 
     @MapsId
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private AppUserEntity appUser;
+    @JoinColumn(name = "company_id", nullable = false)
+    private CompanyEntity company;
 
     @Column(nullable = false)
     private Integer productsNumber = 0;
