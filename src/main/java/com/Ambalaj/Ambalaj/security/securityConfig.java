@@ -75,6 +75,8 @@ public class securityConfig {
                                                          .hasRole(AppUserType.COMPANY.name())
                                                          .requestMatchers("/api/v*/product/**")
                                                          .permitAll()
+                                                         .requestMatchers("/api/v*/company/**")
+                                                         .permitAll()
                                                          .requestMatchers("/swagger-ui/**").permitAll()
                                                          .requestMatchers("/api-docs/**").permitAll().anyRequest()
                                                          .authenticated())

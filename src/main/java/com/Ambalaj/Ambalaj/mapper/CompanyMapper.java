@@ -11,6 +11,9 @@ import org.mapstruct.Mapping;
 public interface CompanyMapper {
     CompanyDTO toDto(CompanyEntity company);
 
+    @Mapping(target = "email", source = "appUser.email")
+    CompanyDTO toAllDetailsDto(CompanyEntity company);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "appUser", source = "user")
     @Mapping(target = "appUser.type", expression = "java(com.Ambalaj.Ambalaj.enums.AppUserType.COMPANY)")

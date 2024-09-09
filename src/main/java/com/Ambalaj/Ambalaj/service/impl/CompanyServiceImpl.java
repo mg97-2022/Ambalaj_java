@@ -19,6 +19,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public CompanyEntity getCompanyByName(String companyName) {
+        return companyRepository.findByName(companyName);
+    }
+
+    @Override
     public CompanyEntity findByAppUser(AppUserEntity appUser) throws NotFoundException {
         return companyRepository.findByAppUser(appUser).orElseThrow(() -> new NotFoundException("Company"));
     }
