@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JpaFeatures {
+
     public Pageable getPaginationWithSort(Integer page, Integer pageSize, String sortBy, String sortDirection) {
         Sort sort = Sort.unsorted();
         if (sortBy != null && !sortBy.isEmpty()) {
@@ -16,5 +17,9 @@ public class JpaFeatures {
             sort = Sort.by(direction, sortBy);
         }
         return PageRequest.of(page, pageSize, sort);
+    }
+
+    public Pageable getPagination(Integer page, Integer pageSize) {
+        return getPaginationWithSort(page, pageSize, null, null);
     }
 }
