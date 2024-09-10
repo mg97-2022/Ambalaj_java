@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/country")
 @RequiredArgsConstructor
@@ -26,6 +28,13 @@ public class CountryController {
         CountryDTO addedCountry = countryUseCase.addCountry(countryDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .body(ResponseDTO.<CountryDTO>builder().data(addedCountry).build());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDTO<List<CountryDTO>>> getAllCountries(
+            @RequestParam(defaultValue = "false", required = false) boolean withCities) {
+        List<CountryDTO> countries = countryUseCase.getAllCountries(withCities);
+        return ResponseEntity.ok(ResponseDTO.<List<CountryDTO>>builder().data(countries).build());
     }
 
     @GetMapping

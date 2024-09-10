@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CountryServiceImpl implements CountryService {
@@ -24,6 +26,11 @@ public class CountryServiceImpl implements CountryService {
 
     public CountryEntity addCountry(CountryEntity country) {
         return countryRepository.save(country);
+    }
+
+    @Override
+    public List<CountryEntity> getAllCountries(Boolean withCities) {
+        return withCities ? countryRepository.findAllCountriesWithCities() : countryRepository.findAll();
     }
 
     public Page<CountryEntity> getCountries(

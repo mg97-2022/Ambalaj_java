@@ -61,7 +61,6 @@ public class DevelopmentGlobalExceptionHandler {
     // For the response message, it will be an array of messages
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ExceptionResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        System.out.println("method" + ex.getBindingResult());
         List<String> errorMessages = new ArrayList<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String errorMessage = error.getDefaultMessage();

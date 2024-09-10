@@ -41,6 +41,11 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
+    public List<MaterialEntity> getAllMaterials() {
+        return materialRepository.findAll();
+    }
+
+    @Override
     public Page<MaterialEntity> getMaterials(
             Integer page, Integer pageSize, String sortBy, String sortDirection, String search) {
         Pageable pageable = jpaFeatures.getPaginationWithSort(page, pageSize, sortBy, sortDirection);

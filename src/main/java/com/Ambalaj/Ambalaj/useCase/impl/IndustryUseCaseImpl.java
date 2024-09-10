@@ -26,6 +26,12 @@ public class IndustryUseCaseImpl implements IndustryUseCase {
     }
 
     @Override
+    public List<IndustryDTO> getAllIndustries() {
+        List<IndustryEntity> industries = industryService.getAllIndustries();
+        return industryMapper.toListDto(industries);
+    }
+
+    @Override
     public PaginatedDTO<IndustryDTO> getIndustries(Integer page, Integer pageSize, String sortBy, String sortDirection,
                                                    String search) {
         Page<IndustryEntity> industryList =

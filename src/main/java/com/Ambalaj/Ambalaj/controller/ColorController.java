@@ -23,7 +23,7 @@ public class ColorController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDTO.<ColorDTO>builder().data(addedColor).build());
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<ResponseDTO<List<ColorDTO>>> getAllColors() {
         List<ColorDTO> colors = colorUseCase.getAllColors();
         return ResponseEntity.ok(ResponseDTO.<List<ColorDTO>>builder().data(colors).build());

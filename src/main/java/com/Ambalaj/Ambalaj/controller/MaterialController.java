@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("api/v1/material")
@@ -29,6 +30,13 @@ public class MaterialController {
         MaterialDTO addedMaterial = materialUseCase.addMaterial(materialRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED)
                              .body(ResponseDTO.<MaterialDTO>builder().data(addedMaterial).build());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDTO<List<MaterialDTO>>> getAllMaterials(
+    ) {
+        List<MaterialDTO> materials = materialUseCase.getAllMaterials();
+        return ResponseEntity.ok(ResponseDTO.<List<MaterialDTO>>builder().data(materials).build());
     }
 
     @GetMapping

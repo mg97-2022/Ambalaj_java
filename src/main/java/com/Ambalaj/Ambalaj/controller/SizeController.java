@@ -23,8 +23,8 @@ public class SizeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDTO.<SizeDTO>builder().data(addedSize).build());
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseDTO<List<SizeDTO>>> getSizes(
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDTO<List<SizeDTO>>> getAllSizes(
     ) {
         List<SizeDTO> sizes = sizeUseCase.getAllSizes();
         return ResponseEntity.ok(ResponseDTO.<List<SizeDTO>>builder().data(sizes).build());

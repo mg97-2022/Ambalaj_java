@@ -1,6 +1,6 @@
 INSERT INTO countries (name) VALUES ('Egypt'), ('Libya'), ('Sudan'), ('Turkey');
 
-INSERT INTO cities (name, country_id) VALUES ('Alexandria', 1);
+INSERT INTO cities (name, country_id) VALUES ('Alexandria', 1), ('Cairo', 1), ('KafrElsheikh', 1), ('Tarablus', 2);
 
 INSERT INTO industries (name) VALUES ('industry 1'), ('industry 2');
 

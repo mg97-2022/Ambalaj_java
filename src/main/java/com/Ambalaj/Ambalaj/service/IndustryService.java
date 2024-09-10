@@ -8,6 +8,8 @@ import java.util.List;
 public interface IndustryService {
     IndustryEntity addIndustry(IndustryEntity industryEntity);
 
+    List<IndustryEntity> getAllIndustries();
+
     Page<IndustryEntity> getIndustries(Integer page, Integer pageSize, String sortBy, String sortDirection,
                                        String search);
 

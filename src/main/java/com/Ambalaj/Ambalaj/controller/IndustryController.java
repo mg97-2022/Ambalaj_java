@@ -1,6 +1,7 @@
 package com.Ambalaj.Ambalaj.controller;
 
 import com.Ambalaj.Ambalaj.dto.IndustryDTO;
+import com.Ambalaj.Ambalaj.dto.MaterialDTO;
 import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 import com.Ambalaj.Ambalaj.dto.ResponseDTO;
 import com.Ambalaj.Ambalaj.useCase.IndustryUseCase;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/industry")
@@ -25,6 +28,14 @@ public class IndustryController {
         return ResponseEntity.status(HttpStatus.CREATED)
                              .body(ResponseDTO.<IndustryDTO>builder().data(addedIndustry).build());
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<ResponseDTO<List<IndustryDTO>>> getAllIndustries(
+    ) {
+        List<IndustryDTO> industries = industryUseCase.getAllIndustries();
+        return ResponseEntity.ok(ResponseDTO.<List<IndustryDTO>>builder().data(industries).build());
+    }
+
 
     @GetMapping
     public ResponseEntity<ResponseDTO<PaginatedDTO<IndustryDTO>>> getIndustries(

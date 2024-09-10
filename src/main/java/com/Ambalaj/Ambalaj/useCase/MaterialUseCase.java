@@ -5,9 +5,12 @@ import com.Ambalaj.Ambalaj.dto.MaterialRequestDTO;
 import com.Ambalaj.Ambalaj.dto.PaginatedDTO;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface MaterialUseCase {
     MaterialDTO addMaterial(MaterialRequestDTO materialRequestDTO) throws IOException;
+
+    List<MaterialDTO> getAllMaterials();
 
     PaginatedDTO<MaterialDTO> getMaterials(
             Integer page, Integer pageSize, String sortBy, String sortDirection, String search);

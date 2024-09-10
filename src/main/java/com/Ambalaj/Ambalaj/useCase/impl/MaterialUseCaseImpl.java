@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -40,22 +41,28 @@ public class MaterialUseCaseImpl implements MaterialUseCase {
     }
 
     @Override
+    public List<MaterialDTO> getAllMaterials() {
+        List<MaterialEntity> allMaterials = materialService.getAllMaterials();
+        return materialMapper.toListDto(allMaterials);
+    }
+
+    @Override
     public PaginatedDTO<MaterialDTO> getMaterials(
             Integer page, Integer pageSize, String sortBy, String sortDirection, String search) {
-        Page<MaterialEntity> pageableCategoryList =
+        Page<MaterialEntity> pageableMaterialList =
                 materialService.getMaterials(page, pageSize, sortBy, sortDirection, search);
-        return materialMapper.toPaginatedDto(pageableCategoryList);
+        return materialMapper.toPaginatedDto(pageableMaterialList);
     }
 
     @Override
     public MaterialDTO getMaterial(Long materialId) {
-        MaterialEntity category = materialService.getMaterial(materialId);
-        return materialMapper.toDto(category);
+        MaterialEntity material = materialService.getMaterial(materialId);
+        return materialMapper.toDto(material);
     }
 
     @Override
     public MaterialDTO updateMaterial(MaterialRequestDTO materialRequestDTO, Long materialId) throws IOException {
-        String image = fileUtil.saveFile(materialRequestDTO.getImage(), "images/categories/");
+        String image = fileUtil.saveFile(materialRequestDTO.getImage(), FilesFolders.MATERIALS_FOLDER);
         try {
             MaterialEntity materialEntity = materialMapper.toEntityFromMaterialRequestDTO(materialRequestDTO);
             if (image != null) materialEntity.setImage(image);

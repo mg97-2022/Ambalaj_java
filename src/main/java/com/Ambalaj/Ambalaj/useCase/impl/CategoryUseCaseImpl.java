@@ -59,7 +59,7 @@ public class CategoryUseCaseImpl implements CategoryUseCase {
 
     @Override
     public CategoryDTO updateCategory(CategoryRequestDTO categoryRequestDTO, Long categoryId) throws IOException {
-        String image = fileUtil.saveFile(categoryRequestDTO.getImage(), "images/categories/");
+        String image = fileUtil.saveFile(categoryRequestDTO.getImage(), FilesFolders.CATEGORIES_FOLDER);
         try {
             CategoryEntity categoryEntity = categoryMapper.toEntityFromCategoryRequestDTO(categoryRequestDTO);
             if (image != null) categoryEntity.setImage(image);

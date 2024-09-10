@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class IndustryServiceImpl implements IndustryService {
@@ -24,6 +26,11 @@ public class IndustryServiceImpl implements IndustryService {
 
     public IndustryEntity addIndustry(IndustryEntity industryEntity) {
         return industryRepository.save(industryEntity);
+    }
+
+    @Override
+    public List<IndustryEntity> getAllIndustries() {
+        return industryRepository.findAll();
     }
 
     public Page<IndustryEntity> getIndustries(
