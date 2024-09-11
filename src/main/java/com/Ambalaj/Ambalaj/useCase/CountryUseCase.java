@@ -8,7 +8,7 @@ import java.util.List;
 public interface CountryUseCase {
     CountryDTO addCountry(CountryDTO countryDTO);
 
-    List<CountryDTO> getAllCountries(Boolean withCities);
+    List<CountryDTO> getAllCountries();
 
     PaginatedDTO<CountryDTO> getCountries(
             Integer page, Integer pageSize, String sortBy, String sortDirection,

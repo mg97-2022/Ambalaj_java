@@ -26,8 +26,8 @@ public class CountryUseCaseImpl implements CountryUseCase {
     }
 
     @Override
-    public List<CountryDTO> getAllCountries(Boolean withCities) {
-        List<CountryEntity> countries = countryService.getAllCountries(withCities);
+    public List<CountryDTO> getAllCountries() {
+        List<CountryEntity> countries = countryService.getAllCountries();
         return countryMapper.toListDto(countries);
     }
 

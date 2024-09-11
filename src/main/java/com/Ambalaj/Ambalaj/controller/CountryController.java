@@ -31,9 +31,8 @@ public class CountryController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<ResponseDTO<List<CountryDTO>>> getAllCountries(
-            @RequestParam(defaultValue = "false", required = false) boolean withCities) {
-        List<CountryDTO> countries = countryUseCase.getAllCountries(withCities);
+    public ResponseEntity<ResponseDTO<List<CountryDTO>>> getAllCountries() {
+        List<CountryDTO> countries = countryUseCase.getAllCountries();
         return ResponseEntity.ok(ResponseDTO.<List<CountryDTO>>builder().data(countries).build());
     }
 

@@ -1,7 +1,6 @@
 package com.Ambalaj.Ambalaj.model;
 
 import com.Ambalaj.Ambalaj.auditing.BaseAuditing;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,6 +19,5 @@ public class CityEntity extends BaseAuditing {
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "country_id", nullable = false)
-    @JsonBackReference // Used to break recursion between cities and countries
     private CountryEntity country;
 }

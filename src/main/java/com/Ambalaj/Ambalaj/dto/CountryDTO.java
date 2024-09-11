@@ -10,6 +10,7 @@ import java.util.List;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
+// Used to ignore cities when it's in request body but consider it in response body
 @JsonIgnoreProperties(value = {"cities"}, allowGetters = true)
 public class CountryDTO {
     private Integer id;

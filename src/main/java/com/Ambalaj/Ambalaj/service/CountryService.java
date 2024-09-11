@@ -8,7 +8,7 @@ import java.util.List;
 public interface CountryService {
     CountryEntity addCountry(CountryEntity countryEntity);
 
-    List<CountryEntity> getAllCountries(Boolean withCities);
+    List<CountryEntity> getAllCountries();
 
     Page<CountryEntity> getCountries(
             Integer page, Integer pageSize, String sortBy, String sortDirection,

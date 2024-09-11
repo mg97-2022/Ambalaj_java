@@ -1,7 +1,6 @@
 package com.Ambalaj.Ambalaj.model;
 
 import com.Ambalaj.Ambalaj.auditing.BaseAuditing;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +19,5 @@ public class CountryEntity extends BaseAuditing {
     private String name;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "country")
-    @JsonManagedReference // Used to break recursion between cities and countries
     private List<CityEntity> cities;
 }

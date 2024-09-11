@@ -29,8 +29,8 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public List<CountryEntity> getAllCountries(Boolean withCities) {
-        return withCities ? countryRepository.findAllCountriesWithCities() : countryRepository.findAll();
+    public List<CountryEntity> getAllCountries() {
+        return countryRepository.findAll();
     }
 
     public Page<CountryEntity> getCountries(
