@@ -9,15 +9,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface PlanMapper {
-    @Mapping(target = "priorityNumber", expression = "java(planEntity.getPriorityNumber().getValue())")
     PlanDTO toDto(PlanEntity planEntity);
 
     @Mapping(target = "discount", defaultValue = "0.00")
     @Mapping(target = "isPopular", defaultValue = "false")
-    @Mapping(target = "status",
-            expression = "java(com.Ambalaj.Ambalaj.enums.PlanStatus.ACTIVE)")
-    @Mapping(target = "priorityNumber",
-            expression = "java(com.Ambalaj.Ambalaj.enums.PlanPriorityNumber.getByValue(planDTO.getPriorityNumber()))")
+    @Mapping(target = "status", expression = "java(com.Ambalaj.Ambalaj.enums.PlanStatus.ACTIVE)")
     PlanEntity toEntity(PlanDTO planDTO);
 
     List<PlanDTO> toListDto(List<PlanEntity> planEntity);

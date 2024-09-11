@@ -37,7 +37,7 @@ VALUES
 INSERT INTO categories (name, image) VALUES ('category 1', 'image'), ('category 2', 'image');
 
 INSERT INTO plans (name, price_per_month, price_per_year, discount, is_popular, account_type, products_number_to_create, priority_number, status)
-VALUES ('free', 0, 0, 0, false, 'COMPANY', 20, 3, 'ACTIVE'), ('free', 0, 0, 0, false, 'CLIENT', null, 3, 'ACTIVE');
+VALUES ('free', 0, 0, 0, false, 'COMPANY', 20, 3, 'ACTIVE'), ('free', 0, 0, 0, false, 'CLIENT', null, 1, 'ACTIVE');
 
 INSERT INTO users (id, enabled, locked, app_register_method, email, password, type)
 VALUES
