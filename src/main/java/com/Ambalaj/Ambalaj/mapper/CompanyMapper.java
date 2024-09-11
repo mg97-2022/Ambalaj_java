@@ -23,7 +23,7 @@ public interface CompanyMapper {
     @Mapping(target = "industries", ignore = true)
     CompanyDTO toDto(CompanyEntity company);
 
-    @Named("displayedDetailsDto")
+    @Named("lessDetailsDto")
     @Mapping(target = "description", ignore = true)
     @Mapping(target = "phoneNumbers", ignore = true)
     @Mapping(target = "website", ignore = true)
@@ -32,7 +32,7 @@ public interface CompanyMapper {
     @Mapping(target = "address", ignore = true)
     @Mapping(target = "categories", ignore = true)
     @Mapping(target = "industries", ignore = true)
-    CompanyDTO toDisplayedDetailsDto(CompanyEntity company);
+    CompanyDTO toLessDetailsDTO(CompanyEntity company);
 
     @Named("allDetailsDto")
     @Mapping(target = "email", source = "appUser.email")
@@ -43,7 +43,7 @@ public interface CompanyMapper {
     @Mapping(target = "appUser.type", expression = "java(com.Ambalaj.Ambalaj.enums.AppUserType.COMPANY)")
     CompanyEntity toEntityFromSignup(CompanySignupRequestDTO companySignupRequestDTO);
 
-    @Mapping(target = "data", source = "content", qualifiedByName = "displayedDetailsDto")
+    @Mapping(target = "data", source = "content", qualifiedByName = "lessDetailsDto")
     @Mapping(target = "currentPage", source = "number")
     @Mapping(target = "pageSize", source = "size")
     PaginatedDTO<CompanyDTO> toPaginatedDto(Page<CompanyEntity> page);

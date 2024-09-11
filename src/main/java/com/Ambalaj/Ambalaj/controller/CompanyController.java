@@ -31,17 +31,6 @@ public class CompanyController {
         return ResponseEntity.ok(ResponseDTO.<PaginatedDTO<CompanyDTO>>builder().data(companies).build());
     }
 
-//    @GetMapping
-//    public ResponseEntity<ResponseDTO<PaginatedDTO<Void>>> getCompanies(
-//            @RequestParam @Min(0) Integer page,
-//            @RequestParam(defaultValue = "10", required = false) @Min(1) @Max(100) Integer pageSize,
-//            @RequestParam(required = false) String sortBy,
-//            @RequestParam(defaultValue = "asc", required = false) String sortDirection,
-//            @RequestParam(required = false) String search, @RequestParam(required = false) @Min(1) Integer countryId) {
-////        PaginatedDTO<CityDTO> cities = cityUseCase.getCities(page, pageSize, sortBy, sortDirection, search, countryId);
-//
-//    }
-
     @GetMapping("/{companyName}")
     public ResponseEntity<ResponseDTO<CompanyDTO>> getCompany(@PathVariable String companyName) {
         CompanyDTO company = companyUseCase.getCompanyByName(companyName);

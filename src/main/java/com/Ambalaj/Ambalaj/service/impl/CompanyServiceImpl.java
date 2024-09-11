@@ -21,7 +21,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
     private final JpaFeatures jpaFeatures;
 
-    private static Specification<CompanyEntity> filterCompanies(
+    private Specification<CompanyEntity> filterCompanies(
             String search, List<Long> cities, List<Integer> countries, List<Long> industries, Long category) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
